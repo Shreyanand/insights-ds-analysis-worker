@@ -52,19 +52,19 @@ def callDirector(df, colNames, colTypes):
         return ('Error: Incorrect number of variables')
 
 if  __name__ == "__main__":
-    CEPH_S3_ACCESS_KEY = 'IREC3HIIFZ2WMB9UA9U8'
-    CEPH_S3_SECRET_KEY = 'gETnAsfiC4v5coC91n7ADHjdeAxI53bpC52f8ivA'
-    CEPH_S3_ENDPOINT = 'http://storage-016.infra.prod.upshift.eng.rdu2.redhat.com:8080'
-    CEPH_S3_BUCKET = 'DH-DEV-INSIGHTS'
-    PARAMS = '{"FILE_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": [ "vendor","model_number"]}'
-    PREFIX =  'shrey-dev'
+#    CEPH_S3_ACCESS_KEY = 'IREC3HIIFZ2WMB9UA9U8'
+#    CEPH_S3_SECRET_KEY = 'gETnAsfiC4v5coC91n7ADHjdeAxI53bpC52f8ivA'
+#    CEPH_S3_ENDPOINT = 'http://storage-016.infra.prod.upshift.eng.rdu2.redhat.com:8080'
+#    CEPH_S3_BUCKET = 'DH-DEV-INSIGHTS'
+#    PARAMS = '{"FILE_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": [ "vendor","model_number"]}'
+#    PREFIX =  'shrey-dev'
 
-#    CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
-#    CEPH_S3_SECRET_KEY = os.environ.get('CEPH_S3_SECRET_KEY')
-#    CEPH_S3_ENDPOINT = os.environ.get('CEPH_S3_ENDPOINT')
-#    CEPH_S3_BUCKET = os.environ.get('CEPH_S3_BUCKET')
-#    PARAMS = os.environ.get('PARAMS')
-#    PREFIX = os.environ.get('CEPH_S3_PREFIX')
+    CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
+    CEPH_S3_SECRET_KEY = os.environ.get('CEPH_S3_SECRET_KEY')
+    CEPH_S3_ENDPOINT = os.environ.get('CEPH_S3_ENDPOINT')
+    CEPH_S3_BUCKET = os.environ.get('CEPH_S3_BUCKET')
+    PARAMS = os.environ.get('PARAMS')
+    PREFIX = os.environ.get('CEPH_S3_PREFIX')
 
     params = json.loads(PARAMS)
     fileName = params['FILE_NAME']
