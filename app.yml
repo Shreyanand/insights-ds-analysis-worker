@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Template
 labels:
-  application: correlation-adhoc1
+  application: insights-ds-correlation-container
   createdBy: template-oshinko-python-spark-build-dc
 metadata:
-  name: correlation-adhoc1
+  name: insights-ds-correlation-container
 parameters:
 - name: GIT_URI
   value: "https://gitlab.cee.redhat.com/shanand/insights-ds-correlation-container.git"
 - name: APPLICATION_NAME
-  value: "correlation-adhoc1"
+  value: "insights-ds-correlation-container"
   required: true
 - name: SPARK_CLUSTER_NAME
   value: "spark-cluster"
