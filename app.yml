@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Template
 
 labels:
-  application: insights-ds-correlation-container
+  application: insights-ds-analysis-worker
 
 metadata:
-  name: insights-ds-correlation-container
+  name: insights-ds-analysis-worker
 
 parameters:
 - name: GIT_URI
-  value: "https://gitlab.cee.redhat.com/shanand/insights-ds-correlation-container.git"
+  value: "https://gitlab.cee.redhat.com/shanand/insights-ds-analysis-worker.git"
 - name: APPLICATION_NAME
   value: "insights-ds-correlation-container"
   required: true

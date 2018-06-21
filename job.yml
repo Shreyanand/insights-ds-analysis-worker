@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Template
 
 labels:
-  application: insights-ds-correlation-container
+  application: insights-ds-analysis-worker
 
 metadata:
-  name: insights-ds-correlation-container
+  name: insights-ds-analysis-worker
 
 parameters:
 - name: APPLICATION_NAME
-  value: 'insights-ds-correlation-container'
+  value: 'insights-ds-analysis-worker'
   required: true
 - name: PARAMS
   value: PARAMS='{"PARSER_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": [ "vendor","model_number"], "OUTFILE_NAME":"graphs.json"}'
