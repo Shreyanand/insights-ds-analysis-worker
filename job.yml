@@ -12,7 +12,7 @@ parameters:
   value: 'insights-ds-analysis-worker'
   required: true
 - name: PARAMS
-  value: PARAMS='{"PARSER_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": [ "vendor","model_number"], "OUTFILE_NAME":"graphs.json"}'
+  value: '{"PARSER_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": [ "vendor","model_number"], "OUTFILE_NAME":"graphs.json"}'
   required: true
 
 objects:
