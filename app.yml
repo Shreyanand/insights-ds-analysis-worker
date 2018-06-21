@@ -1,36 +1,20 @@
 apiVersion: v1
 kind: Template
+
 labels:
   application: insights-ds-correlation-container
-  createdBy: template-oshinko-python-spark-build-dc
+
 metadata:
   name: insights-ds-correlation-container
+
 parameters:
 - name: GIT_URI
   value: "https://gitlab.cee.redhat.com/shanand/insights-ds-correlation-container.git"
 - name: APPLICATION_NAME
   value: "insights-ds-correlation-container"
   required: true
-- name: SPARK_CLUSTER_NAME
-  value: "spark-cluster"
-- name: SPARK_MASTER
-  value: "spark://spark-cluster:7077"
-- name: CEPH_S3_ACCESS_KEY
-  value: "IREC3HIIFZ2WMB9UA9U8"
-- name: CEPH_S3_SECRET_KEY
-  value: "gETnAsfiC4v5coC91n7ADHjdeAxI53bpC52f8ivA"
-- name: CEPH_S3_ENDPOINT
-  value: "http://storage-016.infra.prod.upshift.eng.rdu2.redhat.com:8080"
-- name: CEPH_S3_CONNECTION_SSL_ENABLED
-  value: "false"
-- name: CEPH_S3_PATH_STYLE_ACCESS
-  value: "True"
-- name: CEPH_S3_BUCKET
-  value: "DH-DEV-INSIGHTS"
-- name: CEPH_S3_PREFIX
-  value: "shrey-dev"
-objects:
 
+objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
@@ -41,6 +25,9 @@ objects:
     dockerImageRepository: ${APPLICATION_NAME}
     tags:
     - name: latest
+    lookupPolicy:
+      local: true
+
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -75,18 +62,3 @@ objects:
     - imageChange: {}
       type: ImageChange
     - type: ConfigChange
-
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: ${APPLICATION_NAME}
-  data:
-  stringData:
-    SPARK_MASTER: "${SPARK_MASTER}"
-    CEPH_S3_ACCESS_KEY: "${CEPH_S3_ACCESS_KEY}"
-    CEPH_S3_SECRET_KEY: "${CEPH_S3_SECRET_KEY}"
-    CEPH_S3_ENDPOINT: "${CEPH_S3_ENDPOINT}"
-    CEPH_S3_CONNECTION_SSL_ENABLED: "${CEPH_S3_CONNECTION_SSL_ENABLED}"
-    CEPH_S3_PATH_STYLE_ACCESS: "${CEPH_S3_PATH_STYLE_ACCESS}"
-    CEPH_S3_BUCKET: "${CEPH_S3_BUCKET}"
-    CEPH_S3_PREFIX: "${CEPH_S3_PREFIX}"
