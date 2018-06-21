@@ -11,7 +11,7 @@ parameters:
 - name: GIT_URI
   value: "https://gitlab.cee.redhat.com/shanand/insights-ds-analysis-worker.git"
 - name: APPLICATION_NAME
-  value: "insights-ds-correlation-container"
+  value: "insights-ds-analysis-worker"
   required: true
 
 objects:
