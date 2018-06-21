@@ -2,19 +2,17 @@ apiVersion: v1
 kind: Template
 
 labels:
-  application: correlation-adhoc1
+  application: insights-ds-correlation-container
 
 metadata:
-  name: correlation-adhoc1
+  name: insights-ds-correlation-container
 
 parameters:
 - name: APPLICATION_NAME
-  value: 'correlation-adhoc1'
+  value: 'insights-ds-correlation-container'
   required: true
-- name: IMAGE
-  value: docker-registry.default.svc:5000/aiops-dev-insights-ds/correlation-adhoc1:latest
 - name: PARAMS
-  value: '{"FILE_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": ["vendor", "cpu_count"]}'
+  value: PARAMS='{"PARSER_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": [ "vendor","model_number"], "OUTFILE_NAME":"graphs.json"}'
   required: true
 
 objects:
@@ -31,12 +29,12 @@ objects:
       spec:
         containers:
         - name: ${APPLICATION_NAME}
-          image: ${IMAGE}
+          image: ${APPLICATION_NAME}:latest
           imagePullPolicy: Always
           env:
               - name: PARAMS
                 value: ${PARAMS}
           envFrom:
             - secretRef:
-                name: ${APPLICATION_NAME}
+                name: insights-ds-analysis
         restartPolicy: OnFailure

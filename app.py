@@ -52,12 +52,6 @@ def callDirector(df, colNames, colTypes):
         return ('Error: Incorrect number of variables')
 
 if  __name__ == "__main__":
-#    CEPH_S3_ACCESS_KEY = 'IREC3HIIFZ2WMB9UA9U8'
-#    CEPH_S3_SECRET_KEY = 'gETnAsfiC4v5coC91n7ADHjdeAxI53bpC52f8ivA'
-#    CEPH_S3_ENDPOINT = 'http://storage-016.infra.prod.upshift.eng.rdu2.redhat.com:8080'
-#    CEPH_S3_BUCKET = 'DH-DEV-INSIGHTS'
-#    PARAMS = '{"FILE_NAME": "2018-04-11/insights_parsers_cpuinfo_cpuinfo", "COL_NAME": [ "vendor","model_number"]}'
-#    PREFIX =  'shrey-dev'
 
     CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
     CEPH_S3_SECRET_KEY = os.environ.get('CEPH_S3_SECRET_KEY')
@@ -67,19 +61,19 @@ if  __name__ == "__main__":
     PREFIX = os.environ.get('CEPH_S3_PREFIX')
 
     params = json.loads(PARAMS)
-    fileName = params['FILE_NAME']
+    parserName = params['PARSER_NAME']
     colNames = params['COL_NAME']
+    outfileName = params['OUTFILE_NAME']
     clientKwargs = {'endpoint_url': CEPH_S3_ENDPOINT}
     ctypes = {'account': 'Categorical','vendor': 'Categorical','cpu_count': 'Numeric','upload_time': 'Categorical','socket_count': 'Numeric',
             'system_id':'Categorical' ,'model_number': 'Categorical','cpu_speed': 'Numeric','cache_size': 'Numeric','model_name': 'Categorical'}
     colTypes = [ctypes[i] for i in  colNames]
-    fname= 'Analysis_for_' + str(colTypes) + '_at_' + str(dtm.now())
+    #fname= 'Analysis_for_' + str(colTypes) + '_at_' + str(dtm.now())
 
     s3 = s3fs.S3FileSystem(secret=CEPH_S3_SECRET_KEY, key=CEPH_S3_ACCESS_KEY, client_kwargs=clientKwargs)
 
-    df = readData(os.path.join(CEPH_S3_BUCKET,fileName),s3)
+    df = readData(os.path.join(CEPH_S3_BUCKET, parserName), s3)
     body = callDirector(df, colNames, colTypes)
-
-    with s3.open(os.path.join(CEPH_S3_BUCKET,PREFIX,fname), 'wb') as f:
+    with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:
         f.write(body.encode('utf-8'))
     print("Graph Written to Ceph")
