@@ -2,6 +2,7 @@ import os
 import json
 import pyarrow.parquet as pq
 import s3fs
+import itertools as it
 from datetime import datetime as dtm
 import statscomp.OneNumOneCat as cat_num
 import statscomp.OneNumZeroCat as sin_num
@@ -50,7 +51,41 @@ def callDirector(df, colNames, colTypes):
             return cat_cat.ZeroNumTwoCat(df, colNames, colTypes)
     else:
         return ('Error: Incorrect number of variables')
+def multiFeatures(df, parser, colNames, colTypes):
+    """This function generates pairs of columns and calls the statistical functions based on the type of columns.
 
+    Args:
+        df (pandas.DataFrame): The dataframe that columns to be analysed.
+        colNames (list): The list of column names to be analysed.
+        colTypes (list): The list of column types (numerical or categorical) for each column name in colName.
+
+    Returns:
+        String: A serialized json string of a list of json serialized plotly graphs.
+    """
+    if len(colTypes) > 2:
+        nameType = {}
+        for i in range(len(colTypes)):
+            nameType[colNames[i]] = colTypes[i]
+        colNamesPairs = ([list(i) for i in it.combinations(colNames, 2)])
+        print(len(colNamesPairs),"Pairwise combinations")
+        output = []
+        for i in colNamesPairs:
+            g = {}
+            colName = i
+            colType = [nameType[j] for j in colName]
+            print(colName)
+            g['parser'] = parser
+            g['cols'] = colName
+            g['graphs'] = callDirector(df, colName, colType)
+            output.append(g)
+        return (output)
+    else:
+        g = {}
+        g['parser'] = parser
+        g['cols'] = colNames
+        g['graphs'] = callDirector(df, colNames, colTypes)
+        return [g]
+    
 if  __name__ == "__main__":
 
     CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
@@ -80,9 +115,9 @@ if  __name__ == "__main__":
             if i == j['name']:
                 colTypes.append(j['type'])
 
-
     df = readData(os.path.join(CEPH_S3_BUCKET, parserName), s3)
-    body = callDirector(df, colNames, colTypes)
+    output = multiFeatures(df, parserName, colNames, colTypes)
+    body = json.dumps(output)
 
     if (outfileName != 'stdout'):
         with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:

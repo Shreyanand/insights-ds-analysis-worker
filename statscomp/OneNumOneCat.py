@@ -205,6 +205,10 @@ def OneNumOneCat(data, colNames, colTypes):
         return
     type_col = {}
     try:
+        if colTypes[0] == 'Numeric':
+            colTypes[0], colTypes[1] = colTypes[1], colTypes[0]
+            colNames[0], colNames[1] = colNames[1], colNames[0]
+            
         type_col[colTypes[0]] = colNames[0]
         type_col[colTypes[1]] = colNames[1]
  
