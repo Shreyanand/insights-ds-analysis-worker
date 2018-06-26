@@ -1,8 +1,7 @@
 import pandas as pd
 from plotly.graph_objs import *
-from plotly import tools,utils
+from plotly import tools
 import operator
-import json
 
 
 def getCountBarChart(df, colNames):
@@ -146,6 +145,5 @@ def ZeroNumTwoCat(data, colNames, colTypes):
 #    g2 = json.dumps(getTopAccounts(data, colNames), cls=utils.PlotlyJSONEncoder)
 #    g3 = json.dumps(getAppearanceAanalysis(data, colNames), cls=utils.PlotlyJSONEncoder)
 #    g =  {'CountBarChart':g1, 'TopAccounts':g2, 'AppearanceAanalysis':g3}
-    g = [getCountBarChart(data, colNames), getTopAccounts(data, colNames), getAppearanceAanalysis(data, colNames)]
-    body = json.dumps(g, cls=utils.PlotlyJSONEncoder)
-    return (body)
+    return([getCountBarChart(data, colNames), getTopAccounts(data, colNames), getAppearanceAanalysis(data, colNames)])
+    

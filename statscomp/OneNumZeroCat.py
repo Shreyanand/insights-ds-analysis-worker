@@ -2,9 +2,7 @@ import pandas as pd
 import numpy as np
 import scipy.stats as stats
 from plotly.graph_objs import *
-from plotly import utils
 import plotly.figure_factory as ff
-import json
 
 
 def validate(data, colNames, colTypes):
@@ -207,6 +205,4 @@ def OneNumZeroCat(df, colNames, colTypes):
 #    g3 = json.dumps(oneNumBar(df, colNames), cls=utils.PlotlyJSONEncoder)
 #    g4 = json.dumps(oneNumDist(df, colNames), cls=utils.PlotlyJSONEncoder)
 #    g =  {'NumTable':g1, 'NumBox':g2, 'NumBar':g3, 'NumDist':g4}
-    g = [oneNumTable(df, colNames), oneNumBox(df, colNames), oneNumBar(df, colNames), oneNumDist(df, colNames)]
-    body = json.dumps(g, cls=utils.PlotlyJSONEncoder)
-    return (body)
+    return ([oneNumTable(df, colNames), oneNumBox(df, colNames), oneNumBar(df, colNames), oneNumDist(df, colNames)])

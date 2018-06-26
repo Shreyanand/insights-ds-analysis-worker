@@ -1,8 +1,7 @@
-import json
 import pandas as pd
 from scipy.stats.stats import pearsonr
 from plotly.graph_objs import *
-from plotly import tools, utils
+from plotly import tools
 
 
 def validate(data, colNames, colTypes):
@@ -279,6 +278,4 @@ def TwoNumZeroCat(df, colNames, colTypes):
 #    g5 = json.dumps(getBoxPlotComparison(df, colNames), cls=utils.PlotlyJSONEncoder)    
 #    g6 = json.dumps(getStatsComparison(df, colNames), cls=utils.PlotlyJSONEncoder) 
 #    g =  {'Correlation':g1, 'Scatter':g2, 'SkewConclusion':g3, 'SkewComparison':g4, 'BoxPlotComparison':g5, 'StatsComparison':g6}
-    g = [getStatsComparison(df, colNames), getBoxPlotComparison(df, colNames), getSkewComparison(df, colNames), getSkewConclusion(df, colNames), getScatter(df, colNames), getCorr(df, colNames)]
-    body = json.dumps(g, cls=utils.PlotlyJSONEncoder)
-    return (body)
+    return ([getStatsComparison(df, colNames), getBoxPlotComparison(df, colNames), getSkewComparison(df, colNames), getSkewConclusion(df, colNames), getScatter(df, colNames), getCorr(df, colNames)])

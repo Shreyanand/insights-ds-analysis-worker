@@ -3,6 +3,7 @@ import json
 import pyarrow.parquet as pq
 import s3fs
 import itertools as it
+from plotly import utils
 from datetime import datetime as dtm
 import statscomp.OneNumOneCat as cat_num
 import statscomp.OneNumZeroCat as sin_num
@@ -117,7 +118,7 @@ if  __name__ == "__main__":
 
     df = readData(os.path.join(CEPH_S3_BUCKET, parserName), s3)
     output = multiFeatures(df, parserName, colNames, colTypes)
-    body = json.dumps(output)
+    body = json.dumps(output, cls=utils.PlotlyJSONEncoder)
 
     if (outfileName != 'stdout'):
         with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:

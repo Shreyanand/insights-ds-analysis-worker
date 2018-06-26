@@ -1,8 +1,6 @@
 import pandas as pd
 from scipy import stats
 from plotly.graph_objs import *
-from plotly import utils
-import json
 
 
 def getCharts(df, colNames):
@@ -137,8 +135,6 @@ def ZeroNumOneCat(df, colNames, colTypes):
 #        g1 = json.dumps(getStats(temp, colNames), cls=utils.PlotlyJSONEncoder)
 #        g2 = json.dumps(getCharts(df, colNames), cls=utils.PlotlyJSONEncoder)
 #        g =  {'Stats':g1, 'Charts':g2}
-        g = [getStats(temp, colNames), getCharts(df, colNames)]
-        body = json.dumps(g, cls=utils.PlotlyJSONEncoder)
-        return (body)
+        return([getStats(temp, colNames), getCharts(df, colNames)])
     else:
         print("Please input one single categorical variable.")

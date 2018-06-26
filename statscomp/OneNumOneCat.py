@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 from plotly.graph_objs import *
 import plotly.figure_factory as ff
-from plotly import utils
-import json
 
 
 def validate(data, colNames, colTypes):
@@ -233,9 +231,7 @@ def OneNumOneCat(data, colNames, colTypes):
 #        
 #        g =  {'cat_vs_num_recs':g1, 'num_attr_spread':g2, 'prob_dist':g3, 'box_plots':g4}
 #        body = json.dumps(g)
-        g = [cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), prob_dist(top_10,type_col), box_plots(top_10,type_col)]
-        body = json.dumps(g, cls=utils.PlotlyJSONEncoder)
-        return (body)
+        return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), prob_dist(top_10,type_col), box_plots(top_10,type_col)])
            
     except KeyError as e:
         print("Please check the column name passed - Key Error: %s"%str(e))
