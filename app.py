@@ -103,7 +103,14 @@ if  __name__ == "__main__":
     clientKwargs = {'endpoint_url': CEPH_S3_ENDPOINT}
     #fname= 'Analysis_for_' + str(colTypes) + '_at_' + str(dtm.now())
     s3 = s3fs.S3FileSystem(secret=CEPH_S3_SECRET_KEY, key=CEPH_S3_ACCESS_KEY, client_kwargs=clientKwargs)
-
+    
+    jobDict = { 'metadata':{'type':'plotly_graphs', 'asyncJob':{'status': 'in_progress'} }, 'data':[], 'errors':[]}
+    body = json.dumps(jobDict, cls=utils.PlotlyJSONEncoder)
+    if (outfileName != 'stdout'):
+        with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:
+            f.write(body.encode('utf-8'))
+        print("Status Written to Ceph")
+    
     with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, 'parsers.json'), 'rb') as f:
         jsonString = f.read()
     parsers = json.loads(jsonString.decode('utf-8'))['parsers']
@@ -118,13 +125,13 @@ if  __name__ == "__main__":
 
     df = readData(os.path.join(CEPH_S3_BUCKET, parserName), s3)
     output = multiFeatures(df, parserName, colNames, colTypes)
-    jobDict = { 'metadata':{'type':'plotly_graphs', 'asyncJob':{'status': 'in_progress'} }, 'data':output}
+    jobDict = { 'metadata':{'type':'plotly_graphs', 'asyncJob':{'status': 'complete'} }, 'data':output, 'errors':[]}
     body = json.dumps(jobDict, cls=utils.PlotlyJSONEncoder)
 
     if (outfileName != 'stdout'):
         with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:
             f.write(body.encode('utf-8'))
-        print("Graph Written to Ceph")
+        print("Output Written to Ceph")
     else:
         print("The following is the json serialized list of graphs \n")
         print(body)
