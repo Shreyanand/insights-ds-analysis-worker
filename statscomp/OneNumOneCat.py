@@ -187,7 +187,7 @@ def OneNumOneCat(data, colNames, colTypes):
     """This function calls the statisitcal methods that generate output graphs.
     
     Args:
-        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
+        data (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
         colNames (list): The list of column names to be analysed.
         colTypes (list): The list of column types (numerical or categorical) for each column name in colName. In this case, ['Categorical','Numeric'].
     

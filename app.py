@@ -118,7 +118,8 @@ if  __name__ == "__main__":
 
     df = readData(os.path.join(CEPH_S3_BUCKET, parserName), s3)
     output = multiFeatures(df, parserName, colNames, colTypes)
-    body = json.dumps(output, cls=utils.PlotlyJSONEncoder)
+    jobDict = { 'metadata':{'type':'plotly_graphs', 'asyncJob':{'status': 'in_progress'} }, 'data':output}
+    body = json.dumps(jobDict, cls=utils.PlotlyJSONEncoder)
 
     if (outfileName != 'stdout'):
         with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:
