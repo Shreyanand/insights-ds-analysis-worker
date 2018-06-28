@@ -83,7 +83,7 @@ def getBoxPlotComparison(df, colNames):
     fig = tools.make_subplots(rows=1, cols=2)
     fig.append_trace(trace1, 1, 1)
     fig.append_trace(trace2, 1, 2)
-    fig['layout'].update(height=600, width=600, title='Box plot comparison between '+colNames[0]+' and '+colNames[1])
+    fig['layout'].update(title='Box plot comparison between '+colNames[0]+' and '+colNames[1])
     return(fig)
 
 
@@ -145,7 +145,8 @@ def getCorr(df, colNames):
             height = 30)
     )
     data = [trace]
-    return(data)
+    fig = Figure(data=data, layout=Layout( dict(title = "Correlation Table for " + str(colNames[0]) +", " + str(colNames[1])) ) )
+    return(fig)
 
 
 def getSkewComparison(df, colNames):
@@ -169,7 +170,7 @@ def getSkewComparison(df, colNames):
     fig = tools.make_subplots(rows=1, cols=2)
     fig.append_trace(trace1, 1, 1)
     fig.append_trace(trace2, 1, 2)
-    fig['layout'].update(height=600, width=600, title='Skewness comparison between '+colNames[0]+' and '+colNames[1])
+    fig['layout'].update(title='Skewness comparison between '+colNames[0]+' and '+colNames[1])
     return(fig)
 
 
@@ -188,37 +189,38 @@ def getSkewConclusion(df, colNames):
     description1 = ''
     description2 = ''
     if skew1 > 1:
-        description1 = 'The das has right-skewed distribution, there is a long tail in the positive direction on the number line. The mean is also to the right of the peak.'
+        description1 = 'The data has right-skewed distribution, there is a long tail in the positive direction on the number line. The mean is also to the right of the peak.'
     elif skew1 < -1:
-        description1 ='The das has left-skewed distribution, there is a long tail in the negative direction on the number line. The mean is also to the left of the peak.'
+        description1 ='The data has left-skewed distribution, there is a long tail in the negative direction on the number line. The mean is also to the left of the peak.'
     else:
         description1 = 'The data has normal distribution.'
         
     if skew2 > 1:
-        description2 = 'The das has right-skewed distribution, there is a long tail in the positive direction on the number line. The mean is also to the right of the peak.'
+        description2 = 'The data has right-skewed distribution, there is a long tail in the positive direction on the number line. The mean is also to the right of the peak.'
     elif skew2 < -1:
-        description2 ='The das has left-skewed distribution, there is a long tail in the negative direction on the number line. The mean is also to the left of the peak.'
+        description2 ='The data has left-skewed distribution, there is a long tail in the negative direction on the number line. The mean is also to the left of the peak.'
     else:
         description2 = 'The data has normal distribution.'
     
     trace = Table(
         header = dict(
-    values = [['<b>Conclustion</b>']],
-    line = dict(color = '#506784'),
-    fill = dict(color = '#119DFF'),
-    align = ['left','center'],
-    font = dict(color = 'white', size = 12),
-    height = 40
-  ),
-    cells=dict(values=[["<b> %s: </b>" % (colNames[0])+description1, "<b> %s: </b>" % (colNames[0])+description2]],
-               line = dict(color = '#506784'),
-                fill = dict(color = ['#25FEFD', 'white']),
-                align = ['left', 'center'],
-                font = dict(color = '#506784', size = 12),
-                height = 30)
+            values = [['<b>Conclustion</b>']],
+            line = dict(color = '#506784'),
+            fill = dict(color = '#119DFF'),
+            align = ['left','center'],
+            font = dict(color = 'white', size = 12),
+            height = 40
+        ),
+        cells=dict(
+            values=[["<b> %s: </b>" % (colNames[0])+description1, "<b> %s: </b>" % (colNames[1])+description2]],
+            line = dict(color = '#506784'),
+            fill = dict(color = ['#25FEFD', 'white']),
+            align = ['left', 'center'],
+            font = dict(color = '#506784', size = 12),
+            height = 30)
     )
-    data = [trace] 
-    layout = Layout()
+    data = [trace]    
+    layout = Layout(dict(title = "Skewness conclusion for " + str(colNames[0]) +", " + str(colNames[1])))
     fig = Figure(data=data, layout=layout)
     return(fig)
 
@@ -254,7 +256,7 @@ def getStatsComparison(df, colNames):
                 font = dict(color = '#506784', size = 12),
                 height = 30))
     data1 = [trace]  
-    layout = Layout()
+    layout = Layout(dict(title = "Summary Table for " + str(colNames[0]) +", " + str(colNames[1])))
     fig = Figure(data=data1, layout=layout)
     return (fig)
 
@@ -271,11 +273,4 @@ def TwoNumZeroCat(df, colNames, colTypes):
         String: A serialized json string of a list of json serialized plotly graphs.
     """
     df = validate(df, colNames, colTypes)
-#    g1 = json.dumps(getCorr(df, colNames), cls=utils.PlotlyJSONEncoder)    
-#    g2 = json.dumps(getScatter(df, colNames), cls=utils.PlotlyJSONEncoder)    
-#    g3 = json.dumps(getSkewConclusion(df, colNames), cls=utils.PlotlyJSONEncoder)    
-#    g4 = json.dumps(getSkewComparison(df, colNames), cls=utils.PlotlyJSONEncoder)    
-#    g5 = json.dumps(getBoxPlotComparison(df, colNames), cls=utils.PlotlyJSONEncoder)    
-#    g6 = json.dumps(getStatsComparison(df, colNames), cls=utils.PlotlyJSONEncoder) 
-#    g =  {'Correlation':g1, 'Scatter':g2, 'SkewConclusion':g3, 'SkewComparison':g4, 'BoxPlotComparison':g5, 'StatsComparison':g6}
     return ([getStatsComparison(df, colNames), getBoxPlotComparison(df, colNames), getSkewComparison(df, colNames), getSkewConclusion(df, colNames), getScatter(df, colNames), getCorr(df, colNames)])

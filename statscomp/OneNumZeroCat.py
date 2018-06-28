@@ -99,7 +99,7 @@ def oneNumTable(df, colName):
                        fill = dict(color='#EDFAFF'),
                        align = ['left'] * 5))
     
-    layout = Layout(dict(width=1000, height=500, title = "Summary Table for " + str(colName[0])))
+    layout = Layout(dict(title = "Summary Table for " + str(colName[0])))
     data = [tblData]
     layout = Layout()
     fig = Figure(data=data, layout=layout)
@@ -200,9 +200,4 @@ def OneNumZeroCat(df, colNames, colTypes):
     """
     
     df = validate(df,colNames, colTypes)  
-#    g1 = json.dumps(oneNumTable(df, colNames), cls=utils.PlotlyJSONEncoder)
-#    g2 = json.dumps(oneNumBox(df, colNames), cls=utils.PlotlyJSONEncoder)
-#    g3 = json.dumps(oneNumBar(df, colNames), cls=utils.PlotlyJSONEncoder)
-#    g4 = json.dumps(oneNumDist(df, colNames), cls=utils.PlotlyJSONEncoder)
-#    g =  {'NumTable':g1, 'NumBox':g2, 'NumBar':g3, 'NumDist':g4}
     return ([oneNumTable(df, colNames), oneNumBox(df, colNames), oneNumBar(df, colNames), oneNumDist(df, colNames)])

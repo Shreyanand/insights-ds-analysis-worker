@@ -111,7 +111,7 @@ def getStats(temp, colNames):
             cells=dict(values=data,
                        line = dict(color='#7D7F80'),
                        fill = dict(color='#EDFAFF')))
-    layout = Layout(dict(width=1000, height=500, title = "Summary Table for " + str(colNames[0])))
+    layout = Layout(dict(title = "Summary Table for " + str(colNames[0])))
     data = [tblData]
     fig = Figure(data=data, layout=layout)
     return(fig)
@@ -132,9 +132,6 @@ def ZeroNumOneCat(df, colNames, colTypes):
         temp = df.groupby(colNames[0])[colNames[0]].count()
         df = pd.DataFrame({colNames[0]: temp.index, 'count':temp.values})
         df = df.sort_values(by=['count'], ascending=False).reset_index()
-#        g1 = json.dumps(getStats(temp, colNames), cls=utils.PlotlyJSONEncoder)
-#        g2 = json.dumps(getCharts(df, colNames), cls=utils.PlotlyJSONEncoder)
-#        g =  {'Stats':g1, 'Charts':g2}
         return([getStats(temp, colNames), getCharts(df, colNames)])
     else:
         print("Please input one single categorical variable.")

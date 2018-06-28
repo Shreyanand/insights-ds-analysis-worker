@@ -36,28 +36,29 @@ def cat_vs_num_recs(data, type_col):
     """
     
     cat_data = 'Categorical' 
-    data = data.values
-    wid = np.ones(len(data[:,1]))
-    plot_data = [Bar(x=str(data[:,1]), 
-                     y=data[:,0],
-                     width=wid*0.3,
+    x = data[type_col[cat_data]].tolist()
+    y = data['count'].tolist()
+    plot_data = [Bar(x=x, 
+                     y=y,
                      marker=dict(
                         color = '#92c5de',
                         opacity=0.8,
                 ))]
     hx=1
-    lth = len(data[:,1])
+    lth = len(x)
+    
     layout = Layout(
     title="NUMBER OF RECORDS FOR TOP " + str(lth) + " " + type_col[cat_data].upper() + "S",
     xaxis=dict(
         title= type_col[cat_data].upper(),
         tickvals=[0.5 + ((2*k-1)*hx/2) for k in range(0,lth)],
-        ticktext=[str(lbl) for lbl in data[:,1]],
+        ticktext=[str(lbl) for lbl in x],
     ),
     yaxis=dict(
-        title= "NUMBER OF RECORDS",     
+        title= "NUMBER OF RECORDS",
+        
         )
-    )  
+    )
     fig = Figure(data=plot_data, layout=layout)
     return (fig)
 
@@ -220,18 +221,8 @@ def OneNumOneCat(data, colNames, colTypes):
         df = df.sort_values(by='count', ascending=False)[:10]  
         cat_vals = df[type_col[cat_data]]
         top_10 = req_data.loc[req_data[type_col[cat_data]].isin(cat_vals)]
-        
-#        g1 = json.dumps(cat_vs_num_recs(df, type_col), cls=utils.PlotlyJSONEncoder)
-#        
-#        g2 = json.dumps(num_attr_spread(top_10, type_col), cls=utils.PlotlyJSONEncoder)
-#        
-#        g3 = json.dumps(prob_dist(top_10,type_col), cls=utils.PlotlyJSONEncoder)
-#        
-#        g4 = json.dumps(box_plots(top_10,type_col), cls=utils.PlotlyJSONEncoder)
-#        
-#        g =  {'cat_vs_num_recs':g1, 'num_attr_spread':g2, 'prob_dist':g3, 'box_plots':g4}
-#        body = json.dumps(g)
-        return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), prob_dist(top_10,type_col), box_plots(top_10,type_col)])
+        # g = prob_dist(top_10,type_col) gives error for model_name, cache_size but works for vendor, cache_size: Exception handling in onenumzerocat
+        return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), box_plots(top_10,type_col)])
            
     except KeyError as e:
         print("Please check the column name passed - Key Error: %s"%str(e))

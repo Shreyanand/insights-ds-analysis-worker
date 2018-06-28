@@ -125,7 +125,7 @@ def getAppearanceAanalysis(df, colNames):
                 font = dict(color = '#506784', size = 12),
                 height = 30))
     data = [trace]
-    layout = Layout()
+    layout = Layout(dict(title = "Appearance Count Table for " + str(colNames[0]) +", " + str(colNames[1])))
     fig = Figure(data=data, layout=layout)
     return (fig)
 
@@ -141,9 +141,5 @@ def ZeroNumTwoCat(data, colNames, colTypes):
     Returns:
         String: A serialized json string of a list of json serialized plotly graphs.
     """
-#    g1 = json.dumps(getCountBarChart(data, colNames), cls=utils.PlotlyJSONEncoder)
-#    g2 = json.dumps(getTopAccounts(data, colNames), cls=utils.PlotlyJSONEncoder)
-#    g3 = json.dumps(getAppearanceAanalysis(data, colNames), cls=utils.PlotlyJSONEncoder)
-#    g =  {'CountBarChart':g1, 'TopAccounts':g2, 'AppearanceAanalysis':g3}
     return([getCountBarChart(data, colNames), getTopAccounts(data, colNames), getAppearanceAanalysis(data, colNames)])
     
