@@ -9,7 +9,7 @@ metadata:
 
 parameters:
 - name: GIT_URI
-  value: "https://gitlab.cee.redhat.com/shanand/insights-ds-analysis-worker.git"
+  value: "https://gitlab.cee.redhat.com/AICoE/insights-ds-analysis-worker.git"
 - name: APPLICATION_NAME
   value: "insights-ds-analysis-worker"
   required: true
