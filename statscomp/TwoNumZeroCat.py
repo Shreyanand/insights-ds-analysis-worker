@@ -36,7 +36,7 @@ def getStatsComparison(df, colNames):
     
     table1 = df[colNames[0]].describe()
     table2 = df[colNames[1]].describe()
-    description=['Total count', 'Average value','Standard deviation','Minimun value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximun value']
+    description=['Total count', 'Average value','Standard deviation','Minimum value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximum value']
     trace = Table(
     header = dict(
     values = [['<b>Basic statistic comparison</b>'],

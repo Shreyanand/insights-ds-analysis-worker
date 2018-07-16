@@ -75,8 +75,8 @@ def getPie(data, colNames):
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the pie chart.
     """
     data = data.values
-    plot = [Pie(labels=data[:, 2],
-                values=data[:, 1],
+    plot = [Pie(labels=data[:, 1],
+                values=data[:, 2],
                 hoverinfo='label+percent',
                 opacity=0.6
     )]

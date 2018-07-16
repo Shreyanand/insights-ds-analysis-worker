@@ -90,7 +90,7 @@ def getTopAccounts(df, colNames):
 
 
 def getAppearanceAanalysis(df, colNames):
-    """This function creates a table that shows the analysis of appearnce count of the account.
+    """This function creates a table that shows the analysis of appearnce count of the columns.
 
     Args:
         df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
@@ -107,7 +107,7 @@ def getAppearanceAanalysis(df, colNames):
     count2 = list(df.groupby(colNames[1])[colNames[1]].count())
     df2 = pd.DataFrame(count2, columns = label)
     table2 = list(df2[label].describe()['count'])
-    description=['Total count', 'Average value','Standard deviation','Minimun value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximun value']
+    description=['Total count', 'Average value','Standard deviation','Minimum value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximum value']
     trace = Table(
     header = dict(
     values = [['<b>Basic statistic analysis on </b>'],

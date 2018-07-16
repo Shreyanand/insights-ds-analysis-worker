@@ -36,68 +36,33 @@ def oneNumTable(df, colName):
     """
     
     lstColVal = list(df.describe(percentiles = [0.25, 0.50, 0.75])[colName[0]]) 
-    if (stats.skew(lstColVal)) > 0.0:
-
-        tblData = Table(
-
-            header=dict(values=['Min','Max', 'Count', 'Average', 'Stdev', '1st Quartile', '2nd Quartile', '3rd Quartile', 'Skewness'],
-                        line = dict(color='#7D7F80'),
-                        fill = dict(color='#a1c3d1'),
-                        align = ['left'] * 5),
-            cells=dict(values=[[int(lstColVal[3])], 
-                               [int(lstColVal[7])], 
-                               [int(lstColVal[0])], 
-                               [int(lstColVal[1])],
-                               [int(lstColVal[2])], 
-                               [int(lstColVal[4])], 
-                               [int(lstColVal[5])], 
-                               [int(lstColVal[6])], 
-                               ["Right"]
-        ],
-                       line = dict(color='#7D7F80'),
-                       fill = dict(color='#EDFAFF'),
-                       align = ['left'] * 5))
-        
-    elif (stats.skew(lstColVal)) < 0:
-        tblData = Table(
-
-            header=dict(values=['Min','Max', 'Count', 'Average', 'Stdev', '1st Quartile', '2nd Quartile', '3rd Quartile', 'Skewness'],
-                        line = dict(color='#7D7F80'),
-                        fill = dict(color='#a1c3d1'),
-                        align = ['left'] * 5),
-            cells=dict(values=[[int(lstColVal[3])], 
-                               [int(lstColVal[7])], 
-                               [int(lstColVal[0])], 
-                               [int(lstColVal[1])],
-                               [int(lstColVal[2])], 
-                               [int(lstColVal[4])], 
-                               [int(lstColVal[5])], 
-                               [int(lstColVal[6])], 
-                               ["Left"]
-        ],
-                       line = dict(color='#7D7F80'),
-                       fill = dict(color='#EDFAFF'),
-                       align = ['left'] * 5))
+    skewVal = stats.skew(lstColVal)
+    if (skewVal) > 0:
+        Skewness = ["Right"]
+    elif (skewVal) < 0:
+        Skewness = ["Left"]
     else:
-        tblData = Table(
-
-            header=dict(values=['Min','Max', 'Count', 'Average', 'Stdev', '1st Quartile', '2nd Quartile', '3rd Quartile', 'Skewness'],
-                        line = dict(color='#7D7F80'),
-                        fill = dict(color='#a1c3d1'),
-                        align = ['left'] * 5),
-            cells=dict(values=[[int(lstColVal[3])], 
-                               [int(lstColVal[7])], 
-                               [int(lstColVal[0])], 
-                               [int(lstColVal[1])],
-                               [int(lstColVal[2])], 
-                               [int(lstColVal[4])], 
-                               [int(lstColVal[5])], 
-                               [int(lstColVal[6])], 
-                               ["No Skew"]
-        ],
-                       line = dict(color='#7D7F80'),
-                       fill = dict(color='#EDFAFF'),
-                       align = ['left'] * 5))
+        Skewness = ["No Skew"]
+        
+    Header = {'Minimum':[int(lstColVal[3])],
+              'Maximum':[int(lstColVal[7])],
+              'Total Count':[int(lstColVal[0])],
+              'Average':[int(lstColVal[1])],
+              'Standard deviation':[int(lstColVal[2])],
+              'First Quartile (25%)':[int(lstColVal[4])],
+              'Median (50%)':[int(lstColVal[5])],
+              'Third Quartile (75%)':[int(lstColVal[6])], 
+              'Skewness':Skewness}
+    
+    tblData = Table(
+        header=dict(values=[i for i in Header],
+                    line = dict(color='#7D7F80'),
+                    fill = dict(color='#a1c3d1'),
+                    align = ['left'] * 5),
+        cells=dict(values=[Header[i] for i in Header ],
+                   line = dict(color='#7D7F80'),
+                   fill = dict(color='#EDFAFF'),
+                   align = ['left'] * 5))
     
     layout = Layout(dict(title = "Summary Table for " + str(colName[0])))
     data = [tblData]
@@ -117,7 +82,7 @@ def oneNumBox(df, colName):
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the box plot.
     """
     
-    boxData = [Box(x=df[colName[0]], name=colName)]
+    boxData = [Box(x=df[colName[0]], name=colName[0])]
     layout = Layout(title='Box Plot for distribution of ' + str(colName[0]))
     fig = Figure(data = boxData, layout = layout)
     return (fig)
@@ -153,7 +118,7 @@ def oneNumBar(df, colName):
         layout = Layout(
         title="Bar Plot Showing Count of Values for " + str(colName[0]),
         xaxis=dict(
-            title= colName
+            title= colName[0]
         ),
         yaxis=dict(
             title= "NUMBER OF RECORDS",      
