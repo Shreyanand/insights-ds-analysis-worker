@@ -23,37 +23,42 @@ def validate(data, colNames, colTypes):
     return data
 
 
-def getScatter(df, colNames):
-    """This function creates a graph that plots two datasets with first column as x-axis, and second column as y-axis.
+def getStatsComparison(df, colNames):
+    """This function creates a table that lists out basic statistic result on the two datasets, such as mean, median, standard deviation, etc.
     
     Args:
         df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
         colNames (list): The list of column names to be analysed.
     
     Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for the Scatter plot.
+        plotly.graph_objs.graph_objs.Figure: A plotly graph for the table.
     """
-    trace = Scatter(
-    x = df[colNames[0]],
-    y = df[colNames[1]],
-    mode = 'markers',
-    marker = dict(
-        color = '#119DFF',
-        line = dict(width = 1)
-        )
-    )
-    data = [trace]
-    layout = Layout(title = 'Scatter plot of the data across ' + colNames[0] + ' and '+ colNames[1],
-          hovermode = 'closest',
-          xaxis = dict(
-          title = colNames[0],
-          ticklen = 5),
-          yaxis = dict(
-          title = colNames[1],
-          ticklen = 5))        
-    return(Figure(data=data,layout=layout))
- 
     
+    table1 = df[colNames[0]].describe()
+    table2 = df[colNames[1]].describe()
+    description=['Total count', 'Average value','Standard deviation','Minimun value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximun value']
+    trace = Table(
+    header = dict(
+    values = [['<b>Basic statistic comparison</b>'],
+                  ["<b> %s </b>" % (colNames[0])],["<b> %s </b>" % (colNames[1])]],
+    line = dict(color = '#506784'),
+    fill = dict(color = '#119DFF'),
+    align = ['left','center'],
+    font = dict(color = 'white', size = 12),
+    height = 40
+  ),
+    cells=dict(values=[description,table1,table2],
+               line = dict(color = '#506784'),
+                fill = dict(color = ['#25FEFD', 'white']),
+                align = ['left', 'center'],
+                font = dict(color = '#506784', size = 12),
+                height = 30))
+    data1 = [trace]  
+    layout = Layout(dict(title = "Summary Table for " + str(colNames[0]) +", " + str(colNames[1])))
+    fig = Figure(data=data1, layout=layout)
+    return (fig)
+
+
 def getBoxPlotComparison(df, colNames):
     """This function creates a box plot of two datasets compared aganist each other.
     
@@ -85,69 +90,7 @@ def getBoxPlotComparison(df, colNames):
     fig.append_trace(trace2, 1, 2)
     fig['layout'].update(title='Box plot comparison between '+colNames[0]+' and '+colNames[1])
     return(fig)
-
-
-def getCorr(df, colNames):
-    """This function creates a table that contains correlation coefficient, p value and a small summary of the two numeric columns.
     
-    Args:
-        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
-        colNames (list): The list of column names to be analysed.
-    
-    Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for table.
-    """
-    corr = pearsonr([int(i) for i in df[colNames[0]].tolist()],[int(i) for i in df[colNames[1]].tolist()])
-    strength = '';
-    sign = '';
-    sig=' '
-    conclusion = '';
-    r=abs(corr[0])
-    if r >0.1 and r < 0.3:
-        strength = 'small correlation'
-    elif r >0.3 and r < 0.5:
-        strength = 'medium/moderate correation'
-    elif r >0.5:
-        strength = 'large/strong correlation'
-    else:
-        strength = 'no correlation'
-    if corr[0] > 0:
-        sign = 'positive'
-    else:
-        sign = 'negative'
-
-    if corr[1] < 0.05:
-        sig = 'statistically significant'
-    else:
-        sig = 'statistically insignificant'
-
-    if strength == 'no correlation':
-        conclusion = 'Two datasets have no correlation'
-    else:
-        conclusion='Two datasets have '+ sign + ' '+ strength +' and this result is ' + sig +'.'
-    table = {'1. The correlation coefficient is': corr[0], '2. P value is': corr[1], '3. Conclusion': conclusion}
-    trace = Table(
-        header = dict(
-            values = [['<b>Simple Analysis on Correlation</b>'],
-                      ['<b>Result</b>']],
-            line = dict(color = '#506784'),
-            fill = dict(color = '#119DFF'),
-            align = ['left','center'],
-            font = dict(color = 'white', size = 12),
-            height = 40
-        ),
-        cells=dict(
-            values=[list(table.keys()), list(table.values())],
-            line = dict(color = '#506784'),
-            fill = dict(color = ['#25FEFD', 'white']),
-            align = ['left', 'center'],
-            font = dict(color = '#506784', size = 12),
-            height = 30)
-    )
-    data = [trace]
-    fig = Figure(data=data, layout=Layout( dict(title = "Correlation Table for " + str(colNames[0]) +", " + str(colNames[1])) ) )
-    return(fig)
-
 
 def getSkewComparison(df, colNames):
     """This function creates histogram graphs of the two datasets compared aganist each other.
@@ -225,40 +168,97 @@ def getSkewConclusion(df, colNames):
     return(fig)
 
 
-def getStatsComparison(df, colNames):
-    """This function creates a table that lists out basic statistic result on the two datasets, such as mean, median, standard deviation, etc.
+def getScatter(df, colNames):
+    """This function creates a graph that plots two datasets with first column as x-axis, and second column as y-axis.
     
     Args:
         df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
         colNames (list): The list of column names to be analysed.
     
     Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for the table.
+        plotly.graph_objs.graph_objs.Figure: A plotly graph for the Scatter plot.
     """
+    trace = Scatter(
+    x = df[colNames[0]],
+    y = df[colNames[1]],
+    mode = 'markers',
+    marker = dict(
+        color = '#119DFF',
+        line = dict(width = 1)
+        )
+    )
+    data = [trace]
+    layout = Layout(title = 'Scatter plot of the data across ' + colNames[0] + ' and '+ colNames[1],
+          hovermode = 'closest',
+          xaxis = dict(
+          title = colNames[0],
+          ticklen = 5),
+          yaxis = dict(
+          title = colNames[1],
+          ticklen = 5))        
+    return(Figure(data=data,layout=layout))
+
+
+def getCorr(df, colNames):
+    """This function creates a table that contains correlation coefficient, p value and a small summary of the two numeric columns.
     
-    table1 = df[colNames[0]].describe()
-    table2 = df[colNames[1]].describe()
-    description=['Total count', 'Average value','Standard deviation','Minimun value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximun value']
+    Args:
+        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
+        colNames (list): The list of column names to be analysed.
+    
+    Returns:
+        plotly.graph_objs.graph_objs.Figure: A plotly graph for table.
+    """
+    corr = pearsonr([int(i) for i in df[colNames[0]].tolist()],[int(i) for i in df[colNames[1]].tolist()])
+    strength = '';
+    sign = '';
+    sig=' '
+    conclusion = '';
+    r=abs(corr[0])
+    if r >0.1 and r < 0.3:
+        strength = 'small correlation'
+    elif r >0.3 and r < 0.5:
+        strength = 'medium/moderate correation'
+    elif r >0.5:
+        strength = 'large/strong correlation'
+    else:
+        strength = 'no correlation'
+    if corr[0] > 0:
+        sign = 'positive'
+    else:
+        sign = 'negative'
+
+    if corr[1] < 0.05:
+        sig = 'statistically significant'
+    else:
+        sig = 'statistically insignificant'
+
+    if strength == 'no correlation':
+        conclusion = 'Two datasets have no correlation'
+    else:
+        conclusion='Two datasets have '+ sign + ' '+ strength +' and this result is ' + sig +'.'
+    table = {'1. The correlation coefficient is': corr[0], '2. P value is': corr[1], '3. Conclusion': conclusion}
     trace = Table(
-    header = dict(
-    values = [['<b>Basic statistic comparison</b>'],
-                  ["<b> %s </b>" % (colNames[0])],["<b> %s </b>" % (colNames[1])]],
-    line = dict(color = '#506784'),
-    fill = dict(color = '#119DFF'),
-    align = ['left','center'],
-    font = dict(color = 'white', size = 12),
-    height = 40
-  ),
-    cells=dict(values=[description,table1,table2],
-               line = dict(color = '#506784'),
-                fill = dict(color = ['#25FEFD', 'white']),
-                align = ['left', 'center'],
-                font = dict(color = '#506784', size = 12),
-                height = 30))
-    data1 = [trace]  
-    layout = Layout(dict(title = "Summary Table for " + str(colNames[0]) +", " + str(colNames[1])))
-    fig = Figure(data=data1, layout=layout)
-    return (fig)
+        header = dict(
+            values = [['<b>Simple Analysis on Correlation</b>'],
+                      ['<b>Result</b>']],
+            line = dict(color = '#506784'),
+            fill = dict(color = '#119DFF'),
+            align = ['left','center'],
+            font = dict(color = 'white', size = 12),
+            height = 40
+        ),
+        cells=dict(
+            values=[list(table.keys()), list(table.values())],
+            line = dict(color = '#506784'),
+            fill = dict(color = ['#25FEFD', 'white']),
+            align = ['left', 'center'],
+            font = dict(color = '#506784', size = 12),
+            height = 30)
+    )
+    data = [trace]
+    fig = Figure(data=data, layout=Layout( dict(title = "Correlation Table for " + str(colNames[0]) +", " + str(colNames[1])) ) )
+    return(fig)
 
 
 def TwoNumZeroCat(df, colNames, colTypes):

@@ -4,7 +4,6 @@ import pyarrow.parquet as pq
 import s3fs
 import itertools as it
 from plotly import utils
-from datetime import datetime as dtm
 import statscomp.OneNumOneCat as cat_num
 import statscomp.OneNumZeroCat as sin_num
 import statscomp.TwoNumZeroCat as num_num
