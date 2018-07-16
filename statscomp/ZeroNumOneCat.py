@@ -1,6 +1,6 @@
 import pandas as pd
 from scipy import stats
-from plotly.graph_objs import *
+import plotly.graph_objs as go
 
 
 def getCharts(df, colNames):
@@ -38,7 +38,7 @@ def getBar(data, colNames):
     """
     data = data.values
     data = data[:10]
-    plot = [Bar(x=str(data[:, 1]),
+    plot = [go.Bar(x=str(data[:, 1]),
                 y=data[:, 2],
                 marker=dict(
                     color='rgb(158,202,225)',
@@ -49,7 +49,7 @@ def getBar(data, colNames):
                 ),
                 opacity=0.6
     )]
-    layout = Layout(
+    layout = go.Layout(
         title="Number of Records for the Top " + str(len(data[:,1])) + " " + colNames[0] + "s",
         xaxis=dict(
             title=colNames[0],
@@ -60,7 +60,7 @@ def getBar(data, colNames):
             title="Number of records",
         )
     )
-    fig = Figure(data=plot, layout=layout)
+    fig = go.Figure(data=plot, layout=layout)
     return (fig)
 
 
@@ -75,15 +75,15 @@ def getPie(data, colNames):
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the pie chart.
     """
     data = data.values
-    plot = [Pie(labels=data[:, 1],
+    plot = [go.Pie(labels=data[:, 1],
                 values=data[:, 2],
                 hoverinfo='label+percent',
                 opacity=0.6
     )]
-    layout = Layout(
+    layout = go.Layout(
         title=str(len(data[:,1])) + " " + colNames[0] + " Shown Proportionally"
     )
-    fig = Figure(data=plot, layout=layout)
+    fig = go.Figure(data=plot, layout=layout)
     return (fig)
 
 
@@ -104,16 +104,16 @@ def getStats(temp, colNames):
     skew = 'right' if stats.describe(temp.values)[4] > 0 else 'left'  
     header = ['Total Number of Categories', 'Max Count', 'Min Count', 'Average Count', 'Max Category', 'Min Category', 'Q1', 'Median', 'Q3', 'Skewness']
     data = [stat[0], stat[7], stat[3], round(stat[1],2), max_col_names, min_col_names, stat[4],stat[5], stat[6], skew] 
-    tblData = Table(
+    tblData = go.Table(
             header=dict(values=header,
                         line = dict(color='#7D7F80'),
                         fill = dict(color='#a1c3d1')),
             cells=dict(values=data,
                        line = dict(color='#7D7F80'),
                        fill = dict(color='#EDFAFF')))
-    layout = Layout(dict(title = "Summary Table for " + str(colNames[0])))
+    layout = go.Layout(dict(title = "Summary Table for " + str(colNames[0])))
     data = [tblData]
-    fig = Figure(data=data, layout=layout)
+    fig = go.Figure(data=data, layout=layout)
     return(fig)
 
 

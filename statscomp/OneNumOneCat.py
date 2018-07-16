@@ -1,6 +1,5 @@
 import pandas as pd
-import numpy as np
-from plotly.graph_objs import *
+import plotly.graph_objs as go
 import plotly.figure_factory as ff
 
 
@@ -38,7 +37,7 @@ def cat_vs_num_recs(data, type_col):
     cat_data = 'Categorical' 
     x = data[type_col[cat_data]].tolist()
     y = data['count'].tolist()
-    plot_data = [Bar(x=x, 
+    plot_data = [go.Bar(x=x, 
                      y=y,
                      marker=dict(
                         color = '#92c5de',
@@ -47,7 +46,7 @@ def cat_vs_num_recs(data, type_col):
     hx=1
     lth = len(x)
     
-    layout = Layout(
+    layout = go.Layout(
     title="NUMBER OF RECORDS FOR TOP " + str(lth) + " " + type_col[cat_data].upper() + "S",
     xaxis=dict(
         title= type_col[cat_data].upper(),
@@ -59,7 +58,7 @@ def cat_vs_num_recs(data, type_col):
         
         )
     )
-    fig = Figure(data=plot_data, layout=layout)
+    fig = go.Figure(data=plot_data, layout=layout)
     return (fig)
 
 
@@ -83,7 +82,7 @@ def num_attr_spread(data, type_col):
     for i in range(len(categories)):
         
         vals = data.loc[data[type_col[cat_data]] == categories[i]]
-        trace0= Scattergl(
+        trace0= go.Scattergl(
             x= vals[type_col[num_data]],
             y= [str(x) for x in vals[type_col[cat_data]]],
             mode= 'markers',
@@ -96,7 +95,7 @@ def num_attr_spread(data, type_col):
         ) 
         l.append(trace0);
     lth = len(categories)
-    layout = Layout(
+    layout = go.Layout(
     showlegend=False,
     title=type_col[num_data].upper() + " VS " + type_col[cat_data].upper() + " FOR TOP " + str(lth) + " " + type_col[cat_data].upper() + "S",
     xaxis=dict(
@@ -107,7 +106,7 @@ def num_attr_spread(data, type_col):
         type= "category"      
         )
     )
-    fig = Figure(data=l, layout=layout)
+    fig = go.Figure(data=l, layout=layout)
     return(fig)
   
     
@@ -160,7 +159,7 @@ def box_plots(data, type_col):
 
     for i in range(len(categories)):
         vals = data.loc[data[type_col[cat_data]] == categories[i]]
-        graph_data = Box(y= vals[type_col[num_data]],
+        graph_data = go.Box(y= vals[type_col[num_data]],
             name = group_labels[i],
             marker = dict(
                 color = colors[i],
@@ -170,7 +169,7 @@ def box_plots(data, type_col):
         
         box_data.append(graph_data)
     lth = len(categories)
-    layout = Layout(
+    layout = go.Layout(
     title = "BOX PLOTS DEPICTING THE DISTRIBUTION OF " + type_col[num_data].upper() + " FOR TOP " + str(lth) + " " + type_col[cat_data].upper() + "S",
     xaxis = dict(
         title= type_col[cat_data].upper(),
@@ -180,7 +179,7 @@ def box_plots(data, type_col):
         title= type_col[num_data].upper(),
         )
     )
-    fig = Figure(data=box_data,layout=layout)
+    fig = go.Figure(data=box_data,layout=layout)
     return (fig)
 
 

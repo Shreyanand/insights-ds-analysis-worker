@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
-from plotly.graph_objs import *
+import plotly.graph_objs as go
 import plotly.figure_factory as ff
 
 
@@ -54,7 +54,7 @@ def oneNumTable(df, colName):
               'Third Quartile (75%)':[int(lstColVal[6])], 
               'Skewness':Skewness}
     
-    tblData = Table(
+    tblData = go.Table(
         header=dict(values=[i for i in Header],
                     line = dict(color='#7D7F80'),
                     fill = dict(color='#a1c3d1'),
@@ -64,10 +64,10 @@ def oneNumTable(df, colName):
                    fill = dict(color='#EDFAFF'),
                    align = ['left'] * 5))
     
-    layout = Layout(dict(title = "Summary Table for " + str(colName[0])))
+    layout = go.Layout(dict(title = "Summary Table for " + str(colName[0])))
     data = [tblData]
-    layout = Layout()
-    fig = Figure(data=data, layout=layout)
+    layout = go.Layout()
+    fig = go.Figure(data=data, layout=layout)
     return(fig)
 
     
@@ -82,9 +82,9 @@ def oneNumBox(df, colName):
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the box plot.
     """
     
-    boxData = [Box(x=df[colName[0]], name=colName[0])]
-    layout = Layout(title='Box Plot for distribution of ' + str(colName[0]))
-    fig = Figure(data = boxData, layout = layout)
+    boxData = [go.Box(x=df[colName[0]], name=colName[0])]
+    layout = go.Layout(title='Box Plot for distribution of ' + str(colName[0]))
+    fig = go.Figure(data = boxData, layout = layout)
     return (fig)
 
 
@@ -109,13 +109,13 @@ def oneNumBar(df, colName):
         texts = []
         for x,y in zip(bounds[0::],bounds[1::]):
             texts.append("(" + str(x) + ", " + str(y) + "]")    
-        barData = [Bar(x=texts, 
+        barData = [go.Bar(x=texts, 
                          y=ax,
                          marker=dict(
                          color = '#92c5de',
                          opacity=0.8)
                     )]  
-        layout = Layout(
+        layout = go.Layout(
         title="Bar Plot Showing Count of Values for " + str(colName[0]),
         xaxis=dict(
             title= colName[0]
@@ -124,7 +124,7 @@ def oneNumBar(df, colName):
             title= "NUMBER OF RECORDS",      
             )
         )
-        fig = Figure(data=barData, layout=layout)
+        fig = go.Figure(data=barData, layout=layout)
         return (fig)
     except IndexError as e:
         print("Oops! Could not generate the Bar Plot due to a '%s' error! Sorry!"%(str(e)))

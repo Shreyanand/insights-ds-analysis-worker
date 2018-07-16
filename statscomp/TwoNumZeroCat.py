@@ -1,6 +1,6 @@
 import pandas as pd
 from scipy.stats.stats import pearsonr
-from plotly.graph_objs import *
+import plotly.graph_objs as go
 from plotly import tools
 
 
@@ -37,7 +37,7 @@ def getStatsComparison(df, colNames):
     table1 = df[colNames[0]].describe()
     table2 = df[colNames[1]].describe()
     description=['Total count', 'Average value','Standard deviation','Minimum value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximum value']
-    trace = Table(
+    trace = go.Table(
     header = dict(
     values = [['<b>Basic statistic comparison</b>'],
                   ["<b> %s </b>" % (colNames[0])],["<b> %s </b>" % (colNames[1])]],
@@ -54,8 +54,8 @@ def getStatsComparison(df, colNames):
                 font = dict(color = '#506784', size = 12),
                 height = 30))
     data1 = [trace]  
-    layout = Layout(dict(title = "Summary Table for " + str(colNames[0]) +", " + str(colNames[1])))
-    fig = Figure(data=data1, layout=layout)
+    layout = go.Layout(dict(title = "Summary Table for " + str(colNames[0]) +", " + str(colNames[1])))
+    fig = go.Figure(data=data1, layout=layout)
     return (fig)
 
 
@@ -69,7 +69,7 @@ def getBoxPlotComparison(df, colNames):
     Returns:
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the box plot.
     """
-    trace1 = Box(
+    trace1 = go.Box(
         y = df[colNames[0]],
         name = colNames[0],
         marker = dict(
@@ -77,7 +77,7 @@ def getBoxPlotComparison(df, colNames):
         ),
         boxmean = True
     )   
-    trace2 = Box(
+    trace2 = go.Box(
         y = df[colNames[1]],
         name = colNames[1],
         marker = dict(
@@ -102,11 +102,11 @@ def getSkewComparison(df, colNames):
     Returns:
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the histogram.
     """
-    trace1 = Histogram(
+    trace1 = go.Histogram(
             x = df[colNames[0]], 
             name = colNames[0],   
              marker = dict(color='rgb(0, 0, 100)'))
-    trace2 = Histogram(
+    trace2 = go.Histogram(
             x = df[colNames[1]], 
             name = colNames[1],
             marker = dict(color='rgb(8, 81, 156)'))
@@ -145,7 +145,7 @@ def getSkewConclusion(df, colNames):
     else:
         description2 = 'The data has normal distribution.'
     
-    trace = Table(
+    trace = go.Table(
         header = dict(
             values = [['<b>Conclustion</b>']],
             line = dict(color = '#506784'),
@@ -163,8 +163,8 @@ def getSkewConclusion(df, colNames):
             height = 30)
     )
     data = [trace]    
-    layout = Layout(dict(title = "Skewness conclusion for " + str(colNames[0]) +", " + str(colNames[1])))
-    fig = Figure(data=data, layout=layout)
+    layout = go.Layout(dict(title = "Skewness conclusion for " + str(colNames[0]) +", " + str(colNames[1])))
+    fig = go.Figure(data=data, layout=layout)
     return(fig)
 
 
@@ -178,7 +178,7 @@ def getScatter(df, colNames):
     Returns:
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the Scatter plot.
     """
-    trace = Scatter(
+    trace = go.Scatter(
     x = df[colNames[0]],
     y = df[colNames[1]],
     mode = 'markers',
@@ -188,7 +188,7 @@ def getScatter(df, colNames):
         )
     )
     data = [trace]
-    layout = Layout(title = 'Scatter plot of the data across ' + colNames[0] + ' and '+ colNames[1],
+    layout = go.Layout(title = 'Scatter plot of the data across ' + colNames[0] + ' and '+ colNames[1],
           hovermode = 'closest',
           xaxis = dict(
           title = colNames[0],
@@ -196,7 +196,7 @@ def getScatter(df, colNames):
           yaxis = dict(
           title = colNames[1],
           ticklen = 5))        
-    return(Figure(data=data,layout=layout))
+    return(go.Figure(data=data,layout=layout))
 
 
 def getCorr(df, colNames):
@@ -238,7 +238,7 @@ def getCorr(df, colNames):
     else:
         conclusion='Two datasets have '+ sign + ' '+ strength +' and this result is ' + sig +'.'
     table = {'1. The correlation coefficient is': corr[0], '2. P value is': corr[1], '3. Conclusion': conclusion}
-    trace = Table(
+    trace = go.Table(
         header = dict(
             values = [['<b>Simple Analysis on Correlation</b>'],
                       ['<b>Result</b>']],
@@ -257,7 +257,7 @@ def getCorr(df, colNames):
             height = 30)
     )
     data = [trace]
-    fig = Figure(data=data, layout=Layout( dict(title = "Correlation Table for " + str(colNames[0]) +", " + str(colNames[1])) ) )
+    fig = go.Figure(data=data, layout=go.Layout( dict(title = "Correlation Table for " + str(colNames[0]) +", " + str(colNames[1])) ) )
     return(fig)
 
 

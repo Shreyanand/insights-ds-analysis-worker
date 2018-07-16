@@ -1,5 +1,5 @@
 import pandas as pd
-from plotly.graph_objs import *
+import plotly.graph_objs as go
 from plotly import tools
 import operator
 
@@ -14,23 +14,23 @@ def getCountBarChart(df, colNames):
     Returns:
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the bar chart.
     """
-    trace1 = Bar(
+    trace1 = go.Bar(
         x = [colNames[0],colNames[1]],
         y = [df[colNames[0]].count(), df[colNames[1]].count()],
         name = 'Total counts'
     )
-    trace2 = Bar(
+    trace2 = go.Bar(
         x = [colNames[0],colNames[1]],
         y = [df[colNames[0]].nunique(), df[colNames[1]].nunique()],
         name = 'Unique counts'
 
     )
     data = [trace1, trace2]
-    layout = Layout(
+    layout = go.Layout(
         barmode = 'group',
         title = 'Count analysis'
     )
-    fig = Figure(data = data, layout = layout)
+    fig = go.Figure(data = data, layout = layout)
     return (fig)
 
 
@@ -60,7 +60,7 @@ def getTopAccounts(df, colNames):
         x1 = list(dict(df.groupby(colNames[0])[colNames[0]].count()).keys())
         y1 = list(dict(df.groupby(colNames[0])[colNames[0]].count()).keys())
 
-    trace1 = Bar(
+    trace1 = go.Bar(
         x = x1,
         y = y1,
         name = colNames[0]
@@ -77,7 +77,7 @@ def getTopAccounts(df, colNames):
         x2 = list(dict(df.groupby(colNames[1])[colNames[1]].count()).keys())
         y2 = list(dict(df.groupby(colNames[1])[colNames[1]].count()).values())
 
-    trace2 = Bar(
+    trace2 = go.Bar(
         x = x2,
         y = y2,
         name = colNames[1]
@@ -108,7 +108,7 @@ def getAppearanceAanalysis(df, colNames):
     df2 = pd.DataFrame(count2, columns = label)
     table2 = list(df2[label].describe()['count'])
     description=['Total count', 'Average value','Standard deviation','Minimum value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximum value']
-    trace = Table(
+    trace = go.Table(
     header = dict(
     values = [['<b>Basic statistic analysis on </b>'],
                   ["<b> %s </b>" % (colNames[0])],["<b> %s </b>" % (colNames[1])]],
@@ -125,8 +125,8 @@ def getAppearanceAanalysis(df, colNames):
                 font = dict(color = '#506784', size = 12),
                 height = 30))
     data = [trace]
-    layout = Layout(dict(title = "Appearance Count Table for " + str(colNames[0]) +", " + str(colNames[1])))
-    fig = Figure(data=data, layout=layout)
+    layout = go.Layout(dict(title = "Appearance Count Table for " + str(colNames[0]) +", " + str(colNames[1])))
+    fig = go.Figure(data=data, layout=layout)
     return (fig)
 
 
