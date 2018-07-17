@@ -197,31 +197,20 @@ def OneNumOneCat(data, colNames, colTypes):
     data = validate(data, colNames, colTypes)
     cat_data = 'Categorical' 
     num_data = 'Numeric'
-    
-    if len(colTypes)!=2 or len(colNames)!=2:
-        print("Function accepts only 2 column names and 2 column types.")
-        return
     type_col = {}
-    try:
-        if colTypes[0] == 'Numeric':
-            colTypes[0], colTypes[1] = colTypes[1], colTypes[0]
-            colNames[0], colNames[1] = colNames[1], colNames[0]
-            
-        type_col[colTypes[0]] = colNames[0]
-        type_col[colTypes[1]] = colNames[1]
- 
-        if(len(type_col) != 2):
-            print("Function accepts one numerical and one categorical column. Please check the types of columns passed!")
-            return
-    
-        req_data = data[[type_col[cat_data], type_col[num_data]]]
-        temp = req_data.groupby(type_col[cat_data])[type_col[num_data]].count()
-        df = pd.DataFrame({colNames[0]: temp.index, 'count':temp.values})
-        df = df.sort_values(by='count', ascending=False)[:10]  
-        cat_vals = df[type_col[cat_data]]
-        top_10 = req_data.loc[req_data[type_col[cat_data]].isin(cat_vals)]
-        # g = prob_dist(top_10,type_col) # gives error for model_name, cache_size but works for vendor, cache_size: Exception handling in onenumzerocat
-        return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), box_plots(top_10,type_col), prob_dist(top_10,type_col)])
-           
-    except KeyError as e:
-        print("Please check the column name passed - Key Error: %s"%str(e))
+
+    if colTypes[0] == 'Numeric':
+        colTypes[0], colTypes[1] = colTypes[1], colTypes[0]
+        colNames[0], colNames[1] = colNames[1], colNames[0]
+        
+    type_col[colTypes[0]] = colNames[0]
+    type_col[colTypes[1]] = colNames[1]
+
+    req_data = data[[type_col[cat_data], type_col[num_data]]]
+    temp = req_data.groupby(type_col[cat_data])[type_col[num_data]].count()
+    df = pd.DataFrame({colNames[0]: temp.index, 'count':temp.values})
+    df = df.sort_values(by='count', ascending=False)[:10]  
+    cat_vals = df[type_col[cat_data]]
+    top_10 = req_data.loc[req_data[type_col[cat_data]].isin(cat_vals)]
+    # g = prob_dist(top_10,type_col) # gives error for model_name, cache_size but works for vendor, cache_size
+    return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), box_plots(top_10,type_col), prob_dist(top_10,type_col)])

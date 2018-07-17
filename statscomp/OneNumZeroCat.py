@@ -98,36 +98,33 @@ def oneNumBar(df, colName):
     Returns:
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the bar plot.
     """
-    try:
-        bins = pd.qcut(x=df[colName[0]], q=15, duplicates='drop')
-        ax = bins.value_counts()
-        bins = bins.cat.as_ordered()
-        bins = bins.cat.categories
-        bounds = bins.left 
-        bounds = list(bounds)
-        bounds.append(bins[len(bounds)-1].right)
-        texts = []
-        for x,y in zip(bounds[0::],bounds[1::]):
-            texts.append("(" + str(x) + ", " + str(y) + "]")    
-        barData = [go.Bar(x=texts, 
-                         y=ax,
-                         marker=dict(
-                         color = '#92c5de',
-                         opacity=0.8)
-                    )]  
-        layout = go.Layout(
-        title="Bar Plot Showing Count of Values for " + str(colName[0]),
-        xaxis=dict(
-            title= colName[0]
-        ),
-        yaxis=dict(
-            title= "NUMBER OF RECORDS",      
-            )
+    bins = pd.qcut(x=df[colName[0]], q=15, duplicates='drop')
+    ax = bins.value_counts()
+    bins = bins.cat.as_ordered()
+    bins = bins.cat.categories
+    bounds = bins.left 
+    bounds = list(bounds)
+    bounds.append(bins[len(bounds)-1].right)
+    texts = []
+    for x,y in zip(bounds[0::],bounds[1::]):
+        texts.append("(" + str(x) + ", " + str(y) + "]")    
+    barData = [go.Bar(x=texts, 
+                     y=ax,
+                     marker=dict(
+                     color = '#92c5de',
+                     opacity=0.8)
+                )]  
+    layout = go.Layout(
+    title="Bar Plot Showing Count of Values for " + str(colName[0]),
+    xaxis=dict(
+        title= colName[0]
+    ),
+    yaxis=dict(
+        title= "NUMBER OF RECORDS",      
         )
-        fig = go.Figure(data=barData, layout=layout)
-        return (fig)
-    except IndexError as e:
-        print("Oops! Could not generate the Bar Plot due to a '%s' error! Sorry!"%(str(e)))
+    )
+    fig = go.Figure(data=barData, layout=layout)
+    return (fig)
 
 
 def oneNumDist(df, colName):
@@ -140,16 +137,15 @@ def oneNumDist(df, colName):
     Returns:
         plotly.graph_objs.graph_objs.Figure: A plotly graph for the distribution plot.
     """
-    try:
-        distData = [df[colName[0]]]
-        group_labels = ['colName']
-        fig = ff.create_distplot(distData, group_labels, show_hist=False, show_rug = False)
-        fig['layout'].update(title='Distribution of ' + str(colName[0]))
-        fig['layout'].update(xaxis=dict(title= colName[0]))
-        fig['layout'].update(yaxis=dict(title="Probability Density"))
-        return (fig)
-    except np.linalg.LinAlgError as err:
-            print("Oops! Cannot plot the Probability Distribution Plot due to a '%s' error! Sorry!"%(str(err)))
+    
+    distData = [df[colName[0]]]
+    group_labels = ['colName']
+    fig = ff.create_distplot(distData, group_labels, show_hist=False, show_rug = False)
+    fig['layout'].update(title='Distribution of ' + str(colName[0]))
+    fig['layout'].update(xaxis=dict(title= colName[0]))
+    fig['layout'].update(yaxis=dict(title="Probability Density"))
+    return (fig)
+
             
             
 def OneNumZeroCat(df, colNames, colTypes):

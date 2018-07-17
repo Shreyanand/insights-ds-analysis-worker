@@ -18,7 +18,6 @@ parameters:
 objects:
 - apiVersion: batch/v1
   kind: Job
-  activeDeadlineSeconds: 300
   metadata:
     name: ${APPLICATION_NAME}
   spec:
