@@ -54,7 +54,7 @@ def callDirector(df, colNames, colTypes):
         elif set(colTypes) == {'Categorical'}:
             return cat_cat.ZeroNumTwoCat(df, colNames, colTypes)
     else:
-        return ('Error: Incorrect number of variables')
+        raise ValueError('Incorrect value of colTypes')
     
     
 def multiFeatures(df, parser, colNames, colTypes):
@@ -131,6 +131,9 @@ def getColumnType(s3, cephPath, parserName, colNames):
             if i == j['name']:
                 colTypes.append(j['type'])
                 
+    if len(colTypes) != len(colNames):
+          raise NameError('Please check column names')
+
     return colTypes
     
 
@@ -147,35 +150,35 @@ def getOutputJson(status, data, errors):
     
 
 if  __name__ == "__main__":
-    try:
-        CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
-        CEPH_S3_SECRET_KEY = os.environ.get('CEPH_S3_SECRET_KEY')
-        CEPH_S3_ENDPOINT = os.environ.get('CEPH_S3_ENDPOINT')
-        CEPH_S3_BUCKET = os.environ.get('CEPH_S3_BUCKET')
-        PARAMS = os.environ.get('PARAMS')
-        PREFIX = os.environ.get('CEPH_S3_PREFIX')
+#    try:
+    CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
+    CEPH_S3_SECRET_KEY = os.environ.get('CEPH_S3_SECRET_KEY')
+    CEPH_S3_ENDPOINT = os.environ.get('CEPH_S3_ENDPOINT')
+    CEPH_S3_BUCKET = os.environ.get('CEPH_S3_BUCKET')
+    PARAMS = os.environ.get('PARAMS')
+    PREFIX = os.environ.get('CEPH_S3_PREFIX')
+
+    params = json.loads(PARAMS)
+    parserName = params['PARSER_NAME']
+    colNames = params['COL_NAME']
+    outfileName = params['OUTFILE_NAME']
+    clientKwargs = {'endpoint_url': CEPH_S3_ENDPOINT}
+    s3 = s3fs.S3FileSystem(secret=CEPH_S3_SECRET_KEY, key=CEPH_S3_ACCESS_KEY, client_kwargs=clientKwargs)
     
-        params = json.loads(PARAMS)
-        parserName = params['PARSER_NAME']
-        colNames = params['COL_NAME']
-        outfileName = params['OUTFILE_NAME']
-        clientKwargs = {'endpoint_url': CEPH_S3_ENDPOINT}
-        s3 = s3fs.S3FileSystem(secret=CEPH_S3_SECRET_KEY, key=CEPH_S3_ACCESS_KEY, client_kwargs=clientKwargs)
-        
-        body = getOutputJson('in_progress',[],[])
-        if (outfileName != 'stdout'):
-            writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Status Written to Ceph")
-    
-        colTypes = getColumnType(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, 'parsers.json'), parserName, colNames)
-        df = readData(s3, os.path.join(CEPH_S3_BUCKET, parserName))
-        output = multiFeatures(df, parserName, colNames, colTypes)
-        body = getOutputJson('complete', output, [])
-    
-        if (outfileName != 'stdout'):
-            writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Output Written to Ceph")
-        else:
-            print("The following is the json serialized list of graphs \n")
-            print(body)
-    except:
-        body = getOutputJson('errors', [], [{'error':str(sys.exc_info()[0]), 'message':str(sys.exc_info()[1]), 'traceback':traceback.format_exc()}])
-        writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Error Written to Ceph")
+    body = getOutputJson('in_progress',[],[])
+    if (outfileName != 'stdout'):
+        writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Status Written to Ceph")
+
+    colTypes = getColumnType(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, 'parsers.json'), parserName, colNames)
+    df = readData(s3, os.path.join(CEPH_S3_BUCKET, parserName))
+    output = multiFeatures(df, parserName, colNames, colTypes)
+    body = getOutputJson('complete', output, [])
+
+    if (outfileName != 'stdout'):
+        writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Output Written to Ceph")
+    else:
+        print("The following is the json serialized list of graphs \n")
+        print(body)
+#    except:
+#        body = getOutputJson('errors', [], [{'error':str(sys.exc_info()[0]), 'message':str(sys.exc_info()[1]), 'traceback':traceback.format_exc()}])
+#        writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Error Written to Ceph")

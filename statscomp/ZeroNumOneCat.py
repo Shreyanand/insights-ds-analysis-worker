@@ -128,10 +128,9 @@ def ZeroNumOneCat(df, colNames, colTypes):
     Returns:
         String: A serialized json string of a list of json serialized plotly graphs.
     """
-    if (len(colNames) == 1) and (colTypes[0] == 'Categorical'):
-        temp = df.groupby(colNames[0])[colNames[0]].count()
-        df = pd.DataFrame({colNames[0]: temp.index, 'count':temp.values})
-        df = df.sort_values(by=['count'], ascending=False).reset_index()
-        return([getStats(temp, colNames), getCharts(df, colNames)])
-    else:
-        print("Please input one single categorical variable.")
+
+    temp = df.groupby(colNames[0])[colNames[0]].count()
+    df = pd.DataFrame({colNames[0]: temp.index, 'count':temp.values})
+    df = df.sort_values(by=['count'], ascending=False).reset_index()
+    return([getStats(temp, colNames), getCharts(df, colNames)])
+
