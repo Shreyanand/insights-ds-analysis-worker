@@ -220,8 +220,8 @@ def OneNumOneCat(data, colNames, colTypes):
         df = df.sort_values(by='count', ascending=False)[:10]  
         cat_vals = df[type_col[cat_data]]
         top_10 = req_data.loc[req_data[type_col[cat_data]].isin(cat_vals)]
-        # g = prob_dist(top_10,type_col) gives error for model_name, cache_size but works for vendor, cache_size: Exception handling in onenumzerocat
-        return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), box_plots(top_10,type_col)])
+        # g = prob_dist(top_10,type_col) # gives error for model_name, cache_size but works for vendor, cache_size: Exception handling in onenumzerocat
+        return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), box_plots(top_10,type_col), prob_dist(top_10,type_col)])
            
     except KeyError as e:
         print("Please check the column name passed - Key Error: %s"%str(e))

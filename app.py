@@ -1,4 +1,6 @@
 import os
+import sys
+import traceback
 import json
 import pyarrow.parquet as pq
 import s3fs
@@ -10,12 +12,13 @@ import statscomp.TwoNumZeroCat as num_num
 import statscomp.ZeroNumOneCat as sin_cat
 import statscomp.ZeroNumTwoCat as cat_cat
 
-def readData(file,s3):
+
+def readData(s3, file):
     """This function reads the data from ceph storage.
 
     Args:
-        file (pandas.DataFrame): The name of the file to be read.
         s3 (s3fs.S3FileSystem): The instance of ceph credentials.
+        file (String): The path of the file to be read.
 
     Returns:
         pandas.DataFrame: The dataframe extracted from the file.
@@ -23,6 +26,7 @@ def readData(file,s3):
     df = pq.ParquetDataset(file, filesystem=s3).read_pandas().to_pandas()
     print("Data collected from ParquetDataset")
     return (df)
+
 
 def callDirector(df, colNames, colTypes):
     """This function calls the statistical functions based on the type of columns.
@@ -51,6 +55,8 @@ def callDirector(df, colNames, colTypes):
             return cat_cat.ZeroNumTwoCat(df, colNames, colTypes)
     else:
         return ('Error: Incorrect number of variables')
+    
+    
 def multiFeatures(df, parser, colNames, colTypes):
     """This function generates pairs of columns and calls the statistical functions based on the type of columns.
 
@@ -85,32 +91,35 @@ def multiFeatures(df, parser, colNames, colTypes):
         g['cols'] = colNames
         g['graphs'] = callDirector(df, colNames, colTypes)
         return [g]
+ 
     
-if  __name__ == "__main__":
-
-    CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
-    CEPH_S3_SECRET_KEY = os.environ.get('CEPH_S3_SECRET_KEY')
-    CEPH_S3_ENDPOINT = os.environ.get('CEPH_S3_ENDPOINT')
-    CEPH_S3_BUCKET = os.environ.get('CEPH_S3_BUCKET')
-    PARAMS = os.environ.get('PARAMS')
-    PREFIX = os.environ.get('CEPH_S3_PREFIX')
-
-    params = json.loads(PARAMS)
-    parserName = params['PARSER_NAME']
-    colNames = params['COL_NAME']
-    outfileName = params['OUTFILE_NAME']
-    clientKwargs = {'endpoint_url': CEPH_S3_ENDPOINT}
-    #fname= 'Analysis_for_' + str(colTypes) + '_at_' + str(dtm.now())
-    s3 = s3fs.S3FileSystem(secret=CEPH_S3_SECRET_KEY, key=CEPH_S3_ACCESS_KEY, client_kwargs=clientKwargs)
+def writetoCeph(s3, path, body, log):
+    """ This function writes to ceph and prints logs on stdout
     
-    jobDict = { 'metadata':{'type':'plotly_graphs', 'asyncJob':{'status': 'in_progress'} }, 'data':[], 'errors':[]}
-    body = json.dumps(jobDict, cls=utils.PlotlyJSONEncoder)
-    if (outfileName != 'stdout'):
-        with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:
+    Args:
+        s3 (s3fs.S3FileSystem): The instance of ceph credentials.
+        path (String): The path of the file to be written.
+        body: The body of the content to be written
+        log: The log to be written on stdout
+    """
+    with s3.open(path, 'wb') as f:
             f.write(body.encode('utf-8'))
-        print("Status Written to Ceph")
+    print(log)
     
-    with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, 'parsers.json'), 'rb') as f:
+    
+def getColumnType(s3, cephPath, parserName, colNames):
+    """ This function access ceph to fetch metadata and find data type of columns.
+    
+    Args:
+        s3 (s3fs.S3FileSystem): The instance of ceph credentials.
+        cephPath (pandas.DataFrame): The path of the file to be written.
+        parserName (String): The name of the parser to be accessed.
+        colNames (list): The names of the columns whose types are required.
+    
+    Returns:
+        list: A list of column types corresponding to the list of column names.
+    """
+    with s3.open(cephPath, 'rb') as f:
         jsonString = f.read()
     parsers = json.loads(jsonString.decode('utf-8'))['parsers']
     for i in parsers:
@@ -121,16 +130,52 @@ if  __name__ == "__main__":
         for j in ctypes:
             if i == j['name']:
                 colTypes.append(j['type'])
+                
+    return colTypes
+    
 
-    df = readData(os.path.join(CEPH_S3_BUCKET, parserName), s3)
-    output = multiFeatures(df, parserName, colNames, colTypes)
-    jobDict = { 'metadata':{'type':'plotly_graphs', 'asyncJob':{'status': 'complete'} }, 'data':output, 'errors':[]}
-    body = json.dumps(jobDict, cls=utils.PlotlyJSONEncoder)
+def getOutputJson(status, data, errors):
+    jobDict = { 
+            'metadata':{
+                    'type':'plotly_graphs', 
+                    'asyncJob':{'status': status} 
+                    }, 
+            'data':data, 
+            'errors':errors
+            }
+    return (json.dumps(jobDict, cls=utils.PlotlyJSONEncoder))
+    
 
-    if (outfileName != 'stdout'):
-        with s3.open(os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), 'wb') as f:
-            f.write(body.encode('utf-8'))
-        print("Output Written to Ceph")
-    else:
-        print("The following is the json serialized list of graphs \n")
-        print(body)
+if  __name__ == "__main__":
+    try:
+        CEPH_S3_ACCESS_KEY = os.environ.get('CEPH_S3_ACCESS_KEY')
+        CEPH_S3_SECRET_KEY = os.environ.get('CEPH_S3_SECRET_KEY')
+        CEPH_S3_ENDPOINT = os.environ.get('CEPH_S3_ENDPOINT')
+        CEPH_S3_BUCKET = os.environ.get('CEPH_S3_BUCKET')
+        PARAMS = os.environ.get('PARAMS')
+        PREFIX = os.environ.get('CEPH_S3_PREFIX')
+    
+        params = json.loads(PARAMS)
+        parserName = params['PARSER_NAME']
+        colNames = params['COL_NAME']
+        outfileName = params['OUTFILE_NAME']
+        clientKwargs = {'endpoint_url': CEPH_S3_ENDPOINT}
+        s3 = s3fs.S3FileSystem(secret=CEPH_S3_SECRET_KEY, key=CEPH_S3_ACCESS_KEY, client_kwargs=clientKwargs)
+        
+        body = getOutputJson('in_progress',[],[])
+        if (outfileName != 'stdout'):
+            writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Status Written to Ceph")
+    
+        colTypes = getColumnType(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, 'parsers.json'), parserName, colNames)
+        df = readData(s3, os.path.join(CEPH_S3_BUCKET, parserName))
+        output = multiFeatures(df, parserName, colNames, colTypes)
+        body = getOutputJson('complete', output, [])
+    
+        if (outfileName != 'stdout'):
+            writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Output Written to Ceph")
+        else:
+            print("The following is the json serialized list of graphs \n")
+            print(body)
+    except:
+        body = getOutputJson('errors', [], [{'error':str(sys.exc_info()[0]), 'message':str(sys.exc_info()[1]), 'traceback':traceback.format_exc()}])
+        writetoCeph(s3, os.path.join(CEPH_S3_BUCKET, PREFIX, outfileName), body, "Error Written to Ceph")
