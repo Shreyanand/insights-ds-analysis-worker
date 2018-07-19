@@ -59,7 +59,7 @@ def cat_vs_num_recs(data, type_col):
         )
     )
     fig = go.Figure(data=plot_data, layout=layout)
-    return (fig)
+    return {"label":"Frequency", "plot":fig}
 
 
 def num_attr_spread(data, type_col):
@@ -107,7 +107,7 @@ def num_attr_spread(data, type_col):
         )
     )
     fig = go.Figure(data=l, layout=layout)
-    return(fig)
+    return {"label":"Spread", "plot":fig}
   
     
 def prob_dist(data, type_col):   
@@ -136,7 +136,7 @@ def prob_dist(data, type_col):
     fig['layout'].update(title='PROBABILITY DENSITY OF ' + type_col[num_data].upper() + " FOR TOP " + str(lth) + " " + type_col[cat_data].upper() + "S")
     fig['layout'].update(xaxis=dict(title=type_col[num_data].upper()))
     fig['layout'].update(yaxis=dict(title="PROBABILITY DENSITY"))
-    return (fig)
+    return {"label":"Prob. Distribution", "plot":fig}
 
 
 def box_plots(data, type_col):
@@ -180,7 +180,7 @@ def box_plots(data, type_col):
         )
     )
     fig = go.Figure(data=box_data,layout=layout)
-    return (fig)
+    return {"label":"Boxplot", "plot":fig}
 
 
 def OneNumOneCat(data, colNames, colTypes):

@@ -56,7 +56,7 @@ def getStatsComparison(df, colNames):
     data1 = [trace]  
     layout = go.Layout(dict(title = "Summary Table for " + str(colNames[0]) +", " + str(colNames[1])))
     fig = go.Figure(data=data1, layout=layout)
-    return (fig)
+    return {"label":"Description", "plot":fig}
 
 
 def getBoxPlotComparison(df, colNames):
@@ -89,7 +89,7 @@ def getBoxPlotComparison(df, colNames):
     fig.append_trace(trace1, 1, 1)
     fig.append_trace(trace2, 1, 2)
     fig['layout'].update(title='Box plot comparison between '+colNames[0]+' and '+colNames[1])
-    return(fig)
+    return {"label":"Comparison", "plot":fig}
     
 
 def getSkewComparison(df, colNames):
@@ -114,7 +114,7 @@ def getSkewComparison(df, colNames):
     fig.append_trace(trace1, 1, 1)
     fig.append_trace(trace2, 1, 2)
     fig['layout'].update(title='Skewness comparison between '+colNames[0]+' and '+colNames[1])
-    return(fig)
+    return {"label":"Skewness", "plot":fig}
 
 
 def getSkewConclusion(df, colNames):
@@ -165,7 +165,7 @@ def getSkewConclusion(df, colNames):
     data = [trace]    
     layout = go.Layout(dict(title = "Skewness conclusion for " + str(colNames[0]) +", " + str(colNames[1])))
     fig = go.Figure(data=data, layout=layout)
-    return(fig)
+    return {"label":"Skew Conclusion", "plot":fig}
 
 
 def getScatter(df, colNames):
@@ -196,8 +196,8 @@ def getScatter(df, colNames):
           yaxis = dict(
           title = colNames[1],
           ticklen = 5))        
-    return(go.Figure(data=data,layout=layout))
-
+    fig = go.Figure(data=data,layout=layout)
+    return {"label":"Scatter", "plot":fig}
 
 def getCorr(df, colNames):
     """This function creates a table that contains correlation coefficient, p value and a small summary of the two numeric columns.
@@ -258,7 +258,7 @@ def getCorr(df, colNames):
     )
     data = [trace]
     fig = go.Figure(data=data, layout=go.Layout( dict(title = "Correlation Table for " + str(colNames[0]) +", " + str(colNames[1])) ) )
-    return(fig)
+    return {"label":"Correlation", "plot":fig}
 
 
 def TwoNumZeroCat(df, colNames, colTypes):

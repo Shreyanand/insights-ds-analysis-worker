@@ -31,8 +31,7 @@ def getCountBarChart(df, colNames):
         title = 'Count analysis'
     )
     fig = go.Figure(data = data, layout = layout)
-    return (fig)
-
+    return {"label":"Unique vs Total", "plot":fig}
 
 def getTopAccounts(df, colNames):
     """This function creates a table that shows top 10 accounts that appear for two given categories.
@@ -86,7 +85,7 @@ def getTopAccounts(df, colNames):
     fig.append_trace(trace1, 1, 1)
     fig.append_trace(trace2, 2, 1)
     fig['layout'].update(height=600, width=600, title='Top accounts for '+colNames[0]+' and '+colNames[1])
-    return (fig)
+    return {"label":"Top Frequency", "plot":fig}
 
 
 def getAppearanceAanalysis(df, colNames):
@@ -127,7 +126,7 @@ def getAppearanceAanalysis(df, colNames):
     data = [trace]
     layout = go.Layout(dict(title = "Appearance Count Table for " + str(colNames[0]) +", " + str(colNames[1])))
     fig = go.Figure(data=data, layout=layout)
-    return (fig)
+    return {"label":"Description", "plot":fig}
 
 
 def ZeroNumTwoCat(data, colNames, colTypes):

@@ -38,7 +38,7 @@ def getBar(data, colNames):
     """
     data = data.values
     data = data[:10]
-    plot = [go.Bar(x=str(data[:, 1]),
+    plot = [go.Bar(x=data[:, 1],
                 y=data[:, 2],
                 marker=dict(
                     color='rgb(158,202,225)',
@@ -61,7 +61,7 @@ def getBar(data, colNames):
         )
     )
     fig = go.Figure(data=plot, layout=layout)
-    return (fig)
+    return {"label":"Top Frequency", "plot":fig}
 
 
 def getPie(data, colNames):
@@ -84,7 +84,7 @@ def getPie(data, colNames):
         title=str(len(data[:,1])) + " " + colNames[0] + " Shown Proportionally"
     )
     fig = go.Figure(data=plot, layout=layout)
-    return (fig)
+    return {"label":"Top Frequency", "plot":fig}
 
 
 def getStats(temp, colNames):
@@ -114,7 +114,7 @@ def getStats(temp, colNames):
     layout = go.Layout(dict(title = "Summary Table for " + str(colNames[0])))
     data = [tblData]
     fig = go.Figure(data=data, layout=layout)
-    return(fig)
+    return {"label":"Description", "plot":fig}
 
 
 def ZeroNumOneCat(df, colNames, colTypes):

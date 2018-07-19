@@ -68,7 +68,7 @@ def oneNumTable(df, colName):
     data = [tblData]
     layout = go.Layout()
     fig = go.Figure(data=data, layout=layout)
-    return(fig)
+    return {"label":"Description", "plot":fig}
 
     
 def oneNumBox(df, colName):
@@ -85,7 +85,7 @@ def oneNumBox(df, colName):
     boxData = [go.Box(x=df[colName[0]], name=colName[0])]
     layout = go.Layout(title='Box Plot for distribution of ' + str(colName[0]))
     fig = go.Figure(data = boxData, layout = layout)
-    return (fig)
+    return {"label":"Boxplot", "plot":fig}
 
 
 def oneNumBar(df, colName):
@@ -124,7 +124,7 @@ def oneNumBar(df, colName):
         )
     )
     fig = go.Figure(data=barData, layout=layout)
-    return (fig)
+    return {"label":"Frequency", "plot":fig}
 
 
 def oneNumDist(df, colName):
@@ -144,7 +144,7 @@ def oneNumDist(df, colName):
     fig['layout'].update(title='Distribution of ' + str(colName[0]))
     fig['layout'].update(xaxis=dict(title= colName[0]))
     fig['layout'].update(yaxis=dict(title="Probability Density"))
-    return (fig)
+    return {"label":"Distribution", "plot":fig}
 
             
             
