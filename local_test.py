@@ -9,37 +9,71 @@ import os
 import json
 from datetime import datetime as dtm
 tests = [
+#        [
+#        {"name": "insights_parsers_lsmod_lsmod",
+#          "columns": ["size", "name"]}
+#     ],
+#                [
+#        {"name": "insights_parsers_lsmod_lsmod",
+#          "columns": ["size", "depnum"]}
+#     ],
+                        [
+        {"name": "insights_parsers_lsmod_lsmod",
+          "columns": ["size"]}
+     ],
         [
         {"name": "insights_parsers_cpuinfo_cpuinfo",
           "columns": ["cpu_count"]},
         {
+          "name": "insights_parsers_lsmod_lsmod",
+          "columns": ["name"]}
+      ], 
+        [      
+        {"name": "insights_parsers_cpuinfo_cpuinfo",
+          "columns": ["cpu_count"]},
+        {
           "name": "insights_parsers_meminfo_meminfo",
+          "columns": ["active"]}
+      ],
+        [
+        {"name": "insights_parsers_lsmod_lsmod",
+          "columns": ["size"]}
+      ],
+        [
+        {"name": "insights_parsers_meminfo_meminfo",
           "columns": ["account"]}
-      ] 
-#        [
-#        {"name": "insights_parsers_cpuinfo_cpuinfo",
-#          "columns": ["model_name"]},
-#        {
-#          "name": "insights_parsers_meminfo_meminfo",
-#          "columns": ["account"]}
-#      ], 
-#        [      
-#        {"name": "insights_parsers_cpuinfo_cpuinfo",
-#          "columns": ["cpu_count"]},
-#        {
-#          "name": "insights_parsers_meminfo_meminfo",
-#          "columns": ["active"]}
-#      ],
-#        [
-#        {"name": "insights_parsers_cpuinfo_cpuinfo",
-#          "columns": ["cpu_count"]}
-#      ],
-#        [
-#        {"name": "insights_parsers_meminfo_meminfo",
-#          "columns": ["account"]}
-#      ]
+      ],
+                [
+        {"name": "insights_parsers_meminfo_meminfo",
+          "columns": ["active"]},
+                 {"name": "insights_parsers_lsmod_lsmod",
+          "columns": ["size"]},
+                         {"name": "insights_parsers_cpuinfo_cpuinfo",
+          "columns": ["cpu_speed"]}
+      ]
 ]
 #tests = [['cache_siz']]
+
+#tests = [
+#        [ {"name": "insights_parsers_cpuinfo_cpuinfo",
+#          "columns": ["cpu_count"]}],
+#        [ {"name": "insights_parsers_cpuinfo_cpuinfo",
+#          "columns": ["model_name"]}
+#                ],
+#        [ {"name": "insights_parsers_cpuinfo_cpuinfo",
+#          "columns": ["cpu_count","cpu_speed"]}
+#                ],
+#        [{"name": "insights_parsers_cpuinfo_cpuinfo",
+#          "columns": ["model_name", "vendor"]}
+#                ]
+#        
+#        ]
+
+#tests = [
+#        [ {"name": "insights_parsers_lsmod_lsmod",
+#          "columns": ["size","depnum"]}]
+#]
+
 for i in tests:
     name = 'Analysis_for_' + str(i) + '_at_' + str(dtm.now()) + ".json"
     params = {

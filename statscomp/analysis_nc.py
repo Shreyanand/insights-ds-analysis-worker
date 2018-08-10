@@ -3,26 +3,6 @@ import plotly.graph_objs as go
 import plotly.figure_factory as ff
 
 
-def validate(data, colNames, colTypes):
-    """This function validates the numeric attributes and drops NAN values.
-    
-    Args:
-        data (pandas.DataFrame): The dataframe that columns to be analysed.
-        colNames (list): The list of column names to be analysed.
-        colTypes (list): The list of column types (numerical or categorical) for each column name in colName. In this case, ['Numeric','Numeric'].
-    
-    Returns:
-        pandas.DataFrame: The modified datframe after validation.
-    """
-    numericIndices = [i for i, x in enumerate(colTypes) if x == "Numeric"]
-    numericCols = [colNames[x] for i,x in enumerate(numericIndices)]
-    
-    for col in numericCols:
-        data[col] = pd.to_numeric(data[col],errors='coerce')
-        data = data[data[col].notnull()] 
-    return data
-
-
 def cat_vs_num_recs(data, type_col):
     """This function genetates a bar plot with the column name on x axis and the total counts on y axis.
     
@@ -31,7 +11,7 @@ def cat_vs_num_recs(data, type_col):
         type_col (dict):  A dictionary with keys as the data type (Categorical, Numeric, etc) and values as the names of the columns.
             
     Returns:
-        String: A serialized json string of plotly graphs.
+        dict: A dict with plotly bar graph and its label.
     """
     
     cat_data = 'Categorical' 
@@ -70,9 +50,10 @@ def num_attr_spread(data, type_col):
         type_col (dict):  A dictionary with keys as the data type (Categorical, Numeric, etc) and values as the names of the columns.
             
     Returns:
-        String: A serialized json string of plotly graphs.
+        dict: A dict with spread of data plotly graph and its label.
     """
     
+    print("Computing spread of the data...")
     cat_data = 'Categorical' 
     num_data = 'Numeric'
     l = []
@@ -118,7 +99,7 @@ def prob_dist(data, type_col):
         type_col (dict):  A dictionary with keys as the data type (Categorical, Numeric, etc) and values as the names of the columns.
             
     Returns:
-        String: A serialized json string of plotly graphs.
+        dict: A dict with probability distribution plotly graph and its label.
     """
     
     cat_data = 'Categorical' 
@@ -147,8 +128,10 @@ def box_plots(data, type_col):
         type_col (dict):  A dictionary with keys as the data type (Categorical, Numeric, etc) and values as the names of the columns.
             
     Returns:
-        String: A serialized json string of plotly graphs.
+        dict: A dict with plotly box graph and its label.
     """
+    
+    print("Computing probability distribution...")
     
     cat_data = 'Categorical' 
     num_data = 'Numeric'
@@ -183,18 +166,19 @@ def box_plots(data, type_col):
     return {"label":"Boxplot", "plot":fig}
 
 
-def OneNumOneCat(data, colNames, colTypes):
-    """This function calls the statisitcal methods that generate output graphs.
+def getTop_10(data, colNames, colTypes):
+    """This function validates the numeric attributes and drops NAN values.
     
     Args:
         data (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
         colNames (list): The list of column names to be analysed.
-        colTypes (list): The list of column types (numerical or categorical) for each column name in colName. In this case, ['Categorical','Numeric'].
+        colTypes (list): The list of column types (numerical or categorical) for each column name in colName. 
     
     Returns:
-        String: A serialized json string of a list of json serialized plotly graphs.
+        tuple: The tuple of columnName:colType dictionary, dataframe with frequency of top 10 categories, and
+        dataframe with values of top 10 categories.
     """
-    data = validate(data, colNames, colTypes)
+    
     cat_data = 'Categorical' 
     num_data = 'Numeric'
     type_col = {}
@@ -206,11 +190,10 @@ def OneNumOneCat(data, colNames, colTypes):
     type_col[colTypes[0]] = colNames[0]
     type_col[colTypes[1]] = colNames[1]
 
-    req_data = data[[type_col[cat_data], type_col[num_data]]]
-    temp = req_data.groupby(type_col[cat_data])[type_col[num_data]].count()
-    df = pd.DataFrame({colNames[0]: temp.index, 'count':temp.values})
-    df = df.sort_values(by='count', ascending=False)[:10]  
-    cat_vals = df[type_col[cat_data]]
-    top_10 = req_data.loc[req_data[type_col[cat_data]].isin(cat_vals)]
-    # g = prob_dist(top_10,type_col) # gives error for model_name, cache_size but works for vendor, cache_size
-    return ([cat_vs_num_recs(df, type_col), num_attr_spread(top_10, type_col), box_plots(top_10,type_col), prob_dist(top_10,type_col)])
+    data = data[[type_col[cat_data], type_col[num_data]]]
+    temp = data.groupby(type_col[cat_data])[type_col[num_data]].count() 
+    df = pd.DataFrame({colNames[0]: temp.index, 'count':temp.values}) #A new dataframe with frequency of categories.
+    df = df.sort_values(by='count', ascending=False)[:10]  #taking first 10
+    top_10 = data.loc[data[type_col[cat_data]].isin(df[type_col[cat_data]])] #entire data for first 10 categories.
+    print("Number of rows for top 10 categories: " + str(top_10.count()[0]))
+    return type_col, df, top_10

@@ -1,65 +1,9 @@
-import pandas as pd
 from scipy.stats.stats import pearsonr
 import plotly.graph_objs as go
 from plotly import tools
 
 
-def validate(data, colNames, colTypes):
-    """This function validates the numeric attributes and drops NAN values.
-    
-    Args:
-        data (pandas.DataFrame): The dataframe that columns to be analysed.
-        colNames (list): The list of column names to be analysed.
-        colTypes (list): The list of column types (numerical or categorical) for each column name in colName. In this case, ['Numeric','Numeric'].
-    
-    Returns:
-        pandas.DataFrame: The modified datframe after validation.
-    """
-    numericIndices = [i for i, x in enumerate(colTypes) if x == "Numeric"]
-    numericCols = [colNames[x] for i,x in enumerate(numericIndices)]
-    for col in numericCols:
-        data[[col]] = data[[col]].apply(pd.to_numeric, errors = 'coerce')
-    data = data.dropna()
-    return data
-
-
-def getStatsComparison(df, colNames):
-    """This function creates a table that lists out basic statistic result on the two datasets, such as mean, median, standard deviation, etc.
-    
-    Args:
-        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.
-        colNames (list): The list of column names to be analysed.
-    
-    Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for the table.
-    """
-    
-    table1 = df[colNames[0]].describe()
-    table2 = df[colNames[1]].describe()
-    description=['Total count', 'Average value','Standard deviation','Minimum value', 'First Quartile (25%)', 'Median (50%)', 'Third Quartile (75%)','Maximum value']
-    trace = go.Table(
-    header = dict(
-    values = [['<b>Basic statistic comparison</b>'],
-                  ["<b> %s </b>" % (colNames[0])],["<b> %s </b>" % (colNames[1])]],
-    line = dict(color = '#506784'),
-    fill = dict(color = '#119DFF'),
-    align = ['left','center'],
-    font = dict(color = 'white', size = 12),
-    height = 40
-  ),
-    cells=dict(values=[description,table1,table2],
-               line = dict(color = '#506784'),
-                fill = dict(color = ['#25FEFD', 'white']),
-                align = ['left', 'center'],
-                font = dict(color = '#506784', size = 12),
-                height = 30))
-    data1 = [trace]  
-    layout = go.Layout(dict(title = "Summary Table for " + str(colNames[0]) +", " + str(colNames[1])))
-    fig = go.Figure(data=data1, layout=layout)
-    return {"label":"Description", "plot":fig}
-
-
-def getBoxPlotComparison(df, colNames):
+def boxPlotComparison(df, colNames):
     """This function creates a box plot of two datasets compared aganist each other.
     
     Args:
@@ -67,8 +11,9 @@ def getBoxPlotComparison(df, colNames):
         colNames (list): The list of column names to be analysed.
     
     Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for the box plot.
+        dict: A dict with box plot plotly graph and its label.
     """
+    
     trace1 = go.Box(
         y = df[colNames[0]],
         name = colNames[0],
@@ -92,7 +37,7 @@ def getBoxPlotComparison(df, colNames):
     return {"label":"Comparison", "plot":fig}
     
 
-def getSkewComparison(df, colNames):
+def skewComparison(df, colNames):
     """This function creates histogram graphs of the two datasets compared aganist each other.
     
     Args:
@@ -100,8 +45,9 @@ def getSkewComparison(df, colNames):
         colNames (list): The list of column names to be analysed.
     
     Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for the histogram.
+        dict: A dict with skew comparison plotly histogram and its label.
     """
+    
     trace1 = go.Histogram(
             x = df[colNames[0]], 
             name = colNames[0],   
@@ -117,7 +63,7 @@ def getSkewComparison(df, colNames):
     return {"label":"Skewness", "plot":fig}
 
 
-def getSkewConclusion(df, colNames):
+def skewConclusion(df, colNames):
     """This function creates a table for short analysis on the Skewness of the dataset.
     
     Args:
@@ -125,8 +71,9 @@ def getSkewConclusion(df, colNames):
         colNames (list): The list of column names to be analysed.
     
     Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for the table.
+        dict: A dict with skew conclusion plotly table and its label.
     """
+    
     skew1 = df[colNames[0]].skew()
     skew2 = df[colNames[1]].skew()
     description1 = ''
@@ -168,7 +115,7 @@ def getSkewConclusion(df, colNames):
     return {"label":"Skew Conclusion", "plot":fig}
 
 
-def getScatter(df, colNames):
+def scatter(df, colNames):
     """This function creates a graph that plots two datasets with first column as x-axis, and second column as y-axis.
     
     Args:
@@ -176,8 +123,9 @@ def getScatter(df, colNames):
         colNames (list): The list of column names to be analysed.
     
     Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for the Scatter plot.
+        dict: A dict with scatter plotly graph and its label.
     """
+    
     trace = go.Scatter(
     x = df[colNames[0]],
     y = df[colNames[1]],
@@ -199,7 +147,7 @@ def getScatter(df, colNames):
     fig = go.Figure(data=data,layout=layout)
     return {"label":"Scatter", "plot":fig}
 
-def getCorr(df, colNames):
+def corr(df, colNames):
     """This function creates a table that contains correlation coefficient, p value and a small summary of the two numeric columns.
     
     Args:
@@ -207,8 +155,9 @@ def getCorr(df, colNames):
         colNames (list): The list of column names to be analysed.
     
     Returns:
-        plotly.graph_objs.graph_objs.Figure: A plotly graph for table.
+        dict: A dict with correlation plotly table and its label.
     """
+    
     corr = pearsonr([int(i) for i in df[colNames[0]].tolist()],[int(i) for i in df[colNames[1]].tolist()])
     strength = '';
     sign = '';
@@ -259,18 +208,3 @@ def getCorr(df, colNames):
     data = [trace]
     fig = go.Figure(data=data, layout=go.Layout( dict(title = "Correlation Table for " + str(colNames[0]) +", " + str(colNames[1])) ) )
     return {"label":"Correlation", "plot":fig}
-
-
-def TwoNumZeroCat(df, colNames, colTypes):
-    """This function calls the statisitcal methods that generate output graphs.
-    
-    Args:
-        df (pandas.DataFrame): The dataframe that columns to be analysed.
-        colNames (list): The list of column names to be analysed.
-        colTypes (list): The list of column types (numerical or categorical) for each column name in colName. In this case, ['Numeric','Numeric'].
-    
-    Returns:
-        String: A serialized json string of a list of json serialized plotly graphs.
-    """
-    df = validate(df, colNames, colTypes)
-    return ([getStatsComparison(df, colNames), getBoxPlotComparison(df, colNames), getSkewComparison(df, colNames), getSkewConclusion(df, colNames), getScatter(df, colNames), getCorr(df, colNames)])
