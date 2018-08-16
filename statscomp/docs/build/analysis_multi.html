@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>analysis_multi module &mdash; statscomp v1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> statscomp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">analysis_multi module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">statscomp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>analysis_multi module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/analysis_multi.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-analysis_multi">
+<span id="analysis-multi-module"></span><h1>analysis_multi module<a class="headerlink" href="#module-analysis_multi" title="Permalink to this headline">¶</a></h1>
+<p>Created on Thu Jul 19 13:06:43 2018</p>
+<p>&#64;author: shrey</p>
+<dl class="function">
+<dt id="analysis_multi.categoricalDescription">
+<code class="descclassname">analysis_multi.</code><code class="descname">categoricalDescription</code><span class="sig-paren">(</span><em>df</em>, <em>colNames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis_multi.html#categoricalDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis_multi.categoricalDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a table that shows the analysis of appearnce count of the columns.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> (<em>pandas.DataFrame</em>) – The pandas dataframe that contains data columns to be analysed.</li>
+<li><strong>colNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column names to be analysed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dict summary statistics plotly table and its label.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis_multi.correlationCategorical">
+<code class="descclassname">analysis_multi.</code><code class="descname">correlationCategorical</code><span class="sig-paren">(</span><em>df</em>, <em>colNames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis_multi.html#correlationCategorical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis_multi.correlationCategorical" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function correlation matrix for categorical variables using cramersV test.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> (<em>pandas.DataFrame</em>) – The pandas dataframe that contains data columns to be analysed.</li>
+<li><strong>colNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column names to be analysed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dict with heatmap plotly graph and its label.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis_multi.correlationMatrix">
+<code class="descclassname">analysis_multi.</code><code class="descname">correlationMatrix</code><span class="sig-paren">(</span><em>colNames</em>, <em>corr_vals</em>, <em>variableType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis_multi.html#correlationMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis_multi.correlationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generates a heatmap of correlation values between features.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column names to be analysed.</li>
+<li><strong>corr_vals</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of values for the correlation matrix.</li>
+<li><strong>variableType</strong> (<em>String</em>) – The type of variable, numeric or categorical.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dict with heatmap plotly graph and its label.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis_multi.correlationNumerical">
+<code class="descclassname">analysis_multi.</code><code class="descname">correlationNumerical</code><span class="sig-paren">(</span><em>df</em>, <em>colNames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis_multi.html#correlationNumerical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis_multi.correlationNumerical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="analysis_multi.cramersV">
+<code class="descclassname">analysis_multi.</code><code class="descname">cramersV</code><span class="sig-paren">(</span><em>confusion_matrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis_multi.html#cramersV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis_multi.cramersV" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate Cramers V statistic for categorial-categorial association.
+uses correction from Bergsma and Wicher,
+Journal of the Korean Statistical Society 42 (2013): 323-328</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>confusion_matrix</strong> (<em>numpy.ndarray</em>) – Confusion matrix of features.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="analysis_multi.numericalDescription">
+<code class="descclassname">analysis_multi.</code><code class="descname">numericalDescription</code><span class="sig-paren">(</span><em>df</em>, <em>colNames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analysis_multi.html#numericalDescription"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis_multi.numericalDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a table that lists out basic statistic result on the two datasets, such as mean, median, standard deviation, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> (<em>pandas.DataFrame</em>) – The pandas dataframe that contains data columns to be analysed.</li>
+<li><strong>colNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column names to be analysed.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dict with summary statistics plotly table and its label.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, shrey.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'v1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

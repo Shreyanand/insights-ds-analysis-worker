@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>utilities module &mdash; statscomp v1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> statscomp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">utilities module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">statscomp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>utilities module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/utilities.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-utilities">
+<span id="utilities-module"></span><h1>utilities module<a class="headerlink" href="#module-utilities" title="Permalink to this headline">¶</a></h1>
+<p>Created on Thu Jul 19 15:01:07 2018</p>
+<p>&#64;author: shrey</p>
+<dl class="function">
+<dt id="utilities.compressCat">
+<code class="descclassname">utilities.</code><code class="descname">compressCat</code><span class="sig-paren">(</span><em>df</em>, <em>colNames</em>, <em>colTypes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#compressCat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.compressCat" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function converts type of categorical variables for efficient storage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> (<em>pandas.DataFrame</em>) – The pandas dataframe that contains data columns to be analysed.</li>
+<li><strong>colNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column names to be analysed.</li>
+<li><strong>colTypes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column types (numerical or categorical) for each column name in colName.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The modified datframe after compression.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.decodeInputJson">
+<code class="descclassname">utilities.</code><code class="descname">decodeInputJson</code><span class="sig-paren">(</span><em>PARAMS</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#decodeInputJson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.decodeInputJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function decodes input variables to be used in the analysis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>PRARAMS</strong> (<em>String</em>) – Json string of input parser.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of input dictionary and parsername:columns dictionary.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.downsampleNum">
+<code class="descclassname">utilities.</code><code class="descname">downsampleNum</code><span class="sig-paren">(</span><em>df</em>, <em>colNames</em>, <em>rows=200000</em>, <em>n_clusters=100</em>, <em>algorithm='MiniBatchKMeans'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#downsampleNum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.downsampleNum" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function downsamples numerical attributes for easy rendering on browser.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> (<em>pandas.DataFrame</em>) – The pandas dataframe that contains data columns to be analysed.</li>
+<li><strong>colNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column names to be analysed.</li>
+<li><strong>rows</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of rows to be remained after downsampling.</li>
+<li><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of clusters to be formed in Kmeans. (Complexity increases linearly with this)</li>
+<li><strong>algorithm</strong> (<em>string</em>) – The algorithm to be used: either MiniBatchKMeans or lttb.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The modified datframe after downsampling.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.downsampleNumCat">
+<code class="descclassname">utilities.</code><code class="descname">downsampleNumCat</code><span class="sig-paren">(</span><em>df</em>, <em>type_col</em>, <em>rows=200000</em>, <em>n_clusters=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#downsampleNumCat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.downsampleNumCat" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function downsamples numerical attributes for easy rendering on browser.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>df</strong> (<em>pandas.DataFrame</em>) – The pandas dataframe that contains data columns to be analysed.</li>
+<li><strong>typ_col</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The dictionary of column names as key and column types as values.</li>
+<li><strong>rows</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of rows to be remained after downsampling.</li>
+<li><strong>n_clusters</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – The number of clusters to be formed in Kmeans (Complexity increases linearly with this).</li>
+<li><strong>algorithm</strong> (<em>string</em>) – The algorithm to be used: either MiniBatchKMeans or lttb.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The modified datframe after downsampling.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.getColumnType">
+<code class="descclassname">utilities.</code><code class="descname">getColumnType</code><span class="sig-paren">(</span><em>s3</em>, <em>cephPath</em>, <em>parserInput</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#getColumnType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.getColumnType" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function access ceph to fetch metadata and find data type of columns.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>s3</strong> (<em>s3fs.S3FileSystem</em>) – The instance of ceph credentials.</li>
+<li><strong>cephPath</strong> (<em>pandas.DataFrame</em>) – The path of the file to be written.</li>
+<li><strong>parserInput</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The dictionary with parsner name as key and column list as value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of column names and column types corresponding to the all the parsers.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.getOutputJson">
+<code class="descclassname">utilities.</code><code class="descname">getOutputJson</code><span class="sig-paren">(</span><em>status</em>, <em>data</em>, <em>errors</em>, <em>bucket</em>, <em>inputParams</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#getOutputJson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.getOutputJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function gives the output json string to be stored in Ceph.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>status</strong> (<em>String</em>) – The status of the job: in_progress, complete, or error.</li>
+<li><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The dictionary associated with output graphs.</li>
+<li><strong>errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The dictionary associated with output errors.</li>
+<li><strong>bucket</strong> (<em>String</em>) – The ceph storage bucket.</li>
+<li><strong>inputParams</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The input parameters dictionary.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The output json string.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">String</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.readData">
+<code class="descclassname">utilities.</code><code class="descname">readData</code><span class="sig-paren">(</span><em>s3</em>, <em>bucket</em>, <em>date</em>, <em>parserInput</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#readData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.readData" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reads the data from ceph storage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>s3</strong> (<em>s3fs.S3FileSystem</em>) – The instance of ceph credentials.</li>
+<li><strong>bucket</strong> (<em>String</em>) – The ceph storage bucket.</li>
+<li><strong>data</strong> (<em>String</em>) – The date of the parser data.</li>
+<li><strong>parserInput</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – The dictionary with parsner name as key and column list as value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The dataframe extracted from the file.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.savePng">
+<code class="descclassname">utilities.</code><code class="descname">savePng</code><span class="sig-paren">(</span><em>figure</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#savePng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.savePng" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function saves static png image of the plotly graph.
+To save the image on ceph, use writetoCeph(s3, path, img, log) where
+img = py.image.get(figure, format=’png’)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>figure</strong> (<em>plotly.graph_objs.graph_objs.Figure</em>) – The plotly figure to be saved.</li>
+<li><strong>path</strong> (<em>String</em>) – The file path where the png image is to be saved.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.validate">
+<code class="descclassname">utilities.</code><code class="descname">validate</code><span class="sig-paren">(</span><em>data</em>, <em>colNames</em>, <em>colTypes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function validates the numeric attributes and drops NAN values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>pandas.DataFrame</em>) – The pandas dataframe that contains data columns to be analysed.</li>
+<li><strong>colNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column names to be analysed.</li>
+<li><strong>colTypes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)"><em>list</em></a>) – The list of column types (numerical or categorical) for each column name in colName.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The modified datframe after validation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">pandas.DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="utilities.writetoCeph">
+<code class="descclassname">utilities.</code><code class="descname">writetoCeph</code><span class="sig-paren">(</span><em>s3</em>, <em>path</em>, <em>body</em>, <em>log</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities.html#writetoCeph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utilities.writetoCeph" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function writes to ceph and prints logs on stdout</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>s3</strong> (<em>s3fs.S3FileSystem</em>) – The instance of ceph credentials.</li>
+<li><strong>path</strong> (<em>String</em>) – The path of the file to be written.</li>
+<li><strong>body</strong> – The body of the content to be written.</li>
+<li><strong>log</strong> – The log to be written on stdout.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, shrey.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'v1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

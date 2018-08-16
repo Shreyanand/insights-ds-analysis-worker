@@ -1,0 +1,503 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>utilities &mdash; statscomp v1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> statscomp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">statscomp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>utilities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for utilities</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Thu Jul 19 15:01:07 2018</span>
+
+<span class="sd">@author: shrey</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pyarrow.parquet</span> <span class="k">as</span> <span class="nn">pq</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">plotly</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">import</span> <span class="nn">plotly.plotly</span> <span class="k">as</span> <span class="nn">py</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <span class="n">MiniBatchKMeans</span>
+<span class="kn">import</span> <span class="nn">lttb</span> 
+
+
+<div class="viewcode-block" id="decodeInputJson"><a class="viewcode-back" href="../utilities.html#utilities.decodeInputJson">[docs]</a><span class="k">def</span> <span class="nf">decodeInputJson</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This function decodes input variables to be used in the analysis.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        PRARAMS(String): Json string of input parser.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple of input dictionary and parsername:columns dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Decoding input...&quot;</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">)</span>
+    <span class="n">parserInput</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span>  <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;parsers&quot;</span><span class="p">]:</span>
+        <span class="n">parserInput</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">params</span><span class="p">,</span> <span class="n">parserInput</span></div>
+
+
+<div class="viewcode-block" id="getColumnType"><a class="viewcode-back" href="../utilities.html#utilities.getColumnType">[docs]</a><span class="k">def</span> <span class="nf">getColumnType</span><span class="p">(</span><span class="n">s3</span><span class="p">,</span> <span class="n">cephPath</span><span class="p">,</span> <span class="n">parserInput</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This function access ceph to fetch metadata and find data type of columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s3 (s3fs.S3FileSystem): The instance of ceph credentials.</span>
+<span class="sd">        cephPath (pandas.DataFrame): The path of the file to be written.</span>
+<span class="sd">        parserInput (dict): The dictionary with parsner name as key and column list as value.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of column names and column types corresponding to the all the parsers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting column types...&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">s3</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">cephPath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">jsonString</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">parsers</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">jsonString</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))[</span><span class="s1">&#39;parsers&#39;</span><span class="p">]</span>
+    <span class="n">colNames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">colTypes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">parsers</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">parserName</span><span class="p">,</span> <span class="n">colName</span> <span class="ow">in</span> <span class="n">parserInput</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">parserName</span><span class="p">:</span>
+                <span class="n">ctypes</span> <span class="o">=</span>  <span class="n">i</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">colName</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ctypes</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">k</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span>
+                            <span class="n">colNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                            <span class="n">colTypes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">colTypes</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">colNames</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Please check if passed column names match parser column names&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">colNames</span><span class="p">,</span> <span class="n">colTypes</span></div>
+
+
+<div class="viewcode-block" id="readData"><a class="viewcode-back" href="../utilities.html#utilities.readData">[docs]</a><span class="k">def</span> <span class="nf">readData</span><span class="p">(</span><span class="n">s3</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">parserInput</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function reads the data from ceph storage.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s3 (s3fs.S3FileSystem): The instance of ceph credentials.</span>
+<span class="sd">        bucket (String): The ceph storage bucket.</span>
+<span class="sd">        data (String): The date of the parser data.</span>
+<span class="sd">        parserInput (dict): The dictionary with parsner name as key and column list as value.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame: The dataframe extracted from the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Collecting data from ParquetDataset...&quot;</span><span class="p">)</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">sysId</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">parserName</span><span class="p">,</span> <span class="n">colNames</span> <span class="ow">in</span> <span class="n">parserInput</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;system_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">colNames</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">colNames</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;system_id&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">colNames</span>
+            <span class="n">sysId</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetDataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">parserName</span><span class="p">),</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">s3</span><span class="p">)</span><span class="o">.</span><span class="n">read_pandas</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dftemp</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">ParquetDataset</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">parserName</span><span class="p">),</span> <span class="n">filesystem</span><span class="o">=</span><span class="n">s3</span><span class="p">)</span><span class="o">.</span><span class="n">read_pandas</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">dftemp</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;system_id&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sysId</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;system_id&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data with &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span>  <span class="s2">&quot; rows collected from ParquetDataset&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compressCat"><a class="viewcode-back" href="../utilities.html#utilities.compressCat">[docs]</a><span class="k">def</span> <span class="nf">compressCat</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colNames</span><span class="p">,</span> <span class="n">colTypes</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;This function converts type of categorical variables for efficient storage.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">        colTypes (list): The list of column types (numerical or categorical) for each column name in colName.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame: The modified datframe after compression.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Compressing categorical data with rows: &quot;</span> <span class="o">+</span>  <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">cat</span> <span class="o">=</span>  <span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">colTypes</span><span class="p">))</span> <span class="k">if</span> <span class="n">colTypes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Categorical&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cat</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="validate"><a class="viewcode-back" href="../utilities.html#utilities.validate">[docs]</a><span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">colNames</span><span class="p">,</span> <span class="n">colTypes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function validates the numeric attributes and drops NAN values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">        colTypes (list): The list of column types (numerical or categorical) for each column name in colName.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame: The modified datframe after validation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">numericIndices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">colTypes</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;Numeric&quot;</span><span class="p">]</span>
+    <span class="n">numericCols</span> <span class="o">=</span> <span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numericIndices</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">numericCols</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data validated with &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; rows remaining&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="downsampleNum"><a class="viewcode-back" href="../utilities.html#utilities.downsampleNum">[docs]</a><span class="k">def</span> <span class="nf">downsampleNum</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colNames</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">200000</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;MiniBatchKMeans&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function downsamples numerical attributes for easy rendering on browser.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">        rows (int): The number of rows to be remained after downsampling.</span>
+<span class="sd">        n_clusters (int): The number of clusters to be formed in Kmeans. (Complexity increases linearly with this)</span>
+<span class="sd">        algorithm (string): The algorithm to be used: either MiniBatchKMeans or lttb.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame: The modified datframe after downsampling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Downsampling...&#39;</span><span class="p">)</span>
+    <span class="n">actRows</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">rows</span> <span class="o">/</span> <span class="n">actRows</span>
+    <span class="k">if</span> <span class="n">frac</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">colNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">colNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s1">&#39;lttb&#39;</span><span class="p">:</span>
+                <span class="n">mat</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]])[</span><span class="n">colNames</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">mat</span> <span class="o">=</span> <span class="n">lttb</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">rows</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downsampled using lttb from &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">actRows</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; to &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">mat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">mat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mat</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">km</span> <span class="o">=</span> <span class="n">MiniBatchKMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">km</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">labels_</span>
+
+        <span class="k">def</span> <span class="nf">smpl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">frac</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;frac&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">frac</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span> <span class="o">=</span> <span class="n">frac</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;labels&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">smpl</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="n">frac</span><span class="p">)[</span><span class="n">colNames</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downsampled from &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">actRows</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; to &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Keeping original data with rows: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">actRows</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="downsampleNumCat"><a class="viewcode-back" href="../utilities.html#utilities.downsampleNumCat">[docs]</a><span class="k">def</span> <span class="nf">downsampleNumCat</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">type_col</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="mi">200000</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function downsamples numerical attributes for easy rendering on browser.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        typ_col (dict): The dictionary of column names as key and column types as values.</span>
+<span class="sd">        rows (int): The number of rows to be remained after downsampling.</span>
+<span class="sd">        n_clusters (int): The number of clusters to be formed in Kmeans (Complexity increases linearly with this).</span>
+<span class="sd">        algorithm (string): The algorithm to be used: either MiniBatchKMeans or lttb.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame: The modified datframe after downsampling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Downsampling...&#39;</span><span class="p">)</span>
+    <span class="n">actRows</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">rows</span> <span class="o">/</span> <span class="n">actRows</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">type_col</span><span class="p">[</span><span class="s1">&#39;Numeric&#39;</span><span class="p">]</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">type_col</span><span class="p">[</span><span class="s1">&#39;Categorical&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">frac</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">clusters</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">km</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">)</span>
+            <span class="n">km</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">labels_</span>
+            <span class="k">return</span> <span class="n">labels</span>
+
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="n">num</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">clusters</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">smpl</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">frac</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;frac&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">frac</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span> <span class="o">=</span> <span class="n">frac</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">cat</span><span class="p">,</span><span class="s1">&#39;labels&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">smpl</span><span class="p">,</span> <span class="n">frac</span><span class="o">=</span><span class="n">frac</span><span class="p">)[[</span><span class="n">cat</span><span class="p">,</span> <span class="n">num</span><span class="p">]]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downsampled from &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">actRows</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; to &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Keeping original data with rows: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">actRows</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="getOutputJson"><a class="viewcode-back" href="../utilities.html#utilities.getOutputJson">[docs]</a><span class="k">def</span> <span class="nf">getOutputJson</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">inputParams</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This function gives the output json string to be stored in Ceph.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        status (String): The status of the job: in_progress, complete, or error.</span>
+<span class="sd">        data (dict): The dictionary associated with output graphs.</span>
+<span class="sd">        errors (dict): The dictionary associated with output errors.</span>
+<span class="sd">        bucket (String): The ceph storage bucket.</span>
+<span class="sd">        inputParams (dict): The input parameters dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        String: The output json string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Preparing output json...&#39;</span><span class="p">)</span>
+    <span class="n">jobDict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;plotly_graphs&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;bucket&quot;</span><span class="p">:</span> <span class="n">bucket</span><span class="p">,</span>
+                    <span class="s2">&quot;asyncJob&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status</span>
+                            <span class="p">}</span>
+                    <span class="p">},</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">inputParams</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;parsers&quot;</span><span class="p">:</span> <span class="n">inputParams</span><span class="p">[</span><span class="s2">&quot;parsers&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;graphs&quot;</span><span class="p">:</span> <span class="n">data</span>
+                      <span class="p">},</span>
+            <span class="s2">&quot;errors&quot;</span><span class="p">:</span> <span class="n">errors</span>
+            <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jobDict</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">PlotlyJSONEncoder</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="writetoCeph"><a class="viewcode-back" href="../utilities.html#utilities.writetoCeph">[docs]</a><span class="k">def</span> <span class="nf">writetoCeph</span><span class="p">(</span><span class="n">s3</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This function writes to ceph and prints logs on stdout</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s3 (s3fs.S3FileSystem): The instance of ceph credentials.</span>
+<span class="sd">        path (String): The path of the file to be written.</span>
+<span class="sd">        body: The body of the content to be written.</span>
+<span class="sd">        log: The log to be written on stdout.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing to Ceph...&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">s3</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">log</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="savePng"><a class="viewcode-back" href="../utilities.html#utilities.savePng">[docs]</a><span class="k">def</span> <span class="nf">savePng</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This function saves static png image of the plotly graph.</span>
+<span class="sd">    To save the image on ceph, use writetoCeph(s3, path, img, log) where</span>
+<span class="sd">    img = py.image.get(figure, format=&#39;png&#39;)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        figure (plotly.graph_objs.graph_objs.Figure): The plotly figure to be saved.</span>
+<span class="sd">        path (String): The file path where the png image is to be saved.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving png image...&quot;</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">py</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">img</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, shrey.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

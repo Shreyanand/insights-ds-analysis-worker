@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>analysis_nn &mdash; statscomp v1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> statscomp
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">statscomp</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>analysis_nn</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for analysis_nn</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.stats.stats</span> <span class="k">import</span> <span class="n">pearsonr</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">from</span> <span class="nn">plotly</span> <span class="k">import</span> <span class="n">tools</span>
+
+
+<div class="viewcode-block" id="boxPlotComparison"><a class="viewcode-back" href="../analysis_nn.html#analysis_nn.boxPlotComparison">[docs]</a><span class="k">def</span> <span class="nf">boxPlotComparison</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colNames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function creates a box plot of two datasets compared aganist each other.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dict with box plot plotly graph and its label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">trace1</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;rgb(8, 81, 156)&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">boxmean</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span>   
+    <span class="n">trace2</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">marker</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;rgb(8, 81, 156)&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">boxmean</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">make_subplots</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">append_trace</span><span class="p">(</span><span class="n">trace1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">append_trace</span><span class="p">(</span><span class="n">trace2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">[</span><span class="s1">&#39;layout&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Box plot comparison between &#39;</span><span class="o">+</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; and &#39;</span><span class="o">+</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;Comparison&quot;</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">:</span><span class="n">fig</span><span class="p">}</span></div>
+    
+
+<div class="viewcode-block" id="skewComparison"><a class="viewcode-back" href="../analysis_nn.html#analysis_nn.skewComparison">[docs]</a><span class="k">def</span> <span class="nf">skewComparison</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colNames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function creates histogram graphs of the two datasets compared aganist each other.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dict with skew comparison plotly histogram and its label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">trace1</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Histogram</span><span class="p">(</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> 
+            <span class="n">name</span> <span class="o">=</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>   
+             <span class="n">marker</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;rgb(0, 0, 100)&#39;</span><span class="p">))</span>
+    <span class="n">trace2</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Histogram</span><span class="p">(</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> 
+            <span class="n">name</span> <span class="o">=</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">marker</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;rgb(8, 81, 156)&#39;</span><span class="p">))</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">make_subplots</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">append_trace</span><span class="p">(</span><span class="n">trace1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">append_trace</span><span class="p">(</span><span class="n">trace2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">[</span><span class="s1">&#39;layout&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Skewness comparison between &#39;</span><span class="o">+</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39; and &#39;</span><span class="o">+</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;Skewness&quot;</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">:</span><span class="n">fig</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="skewConclusion"><a class="viewcode-back" href="../analysis_nn.html#analysis_nn.skewConclusion">[docs]</a><span class="k">def</span> <span class="nf">skewConclusion</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colNames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function creates a table for short analysis on the Skewness of the dataset.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dict with skew conclusion plotly table and its label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">skew1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">skew</span><span class="p">()</span>
+    <span class="n">skew2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">skew</span><span class="p">()</span>
+    <span class="n">description1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">description2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">skew1</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">description1</span> <span class="o">=</span> <span class="s1">&#39;The data has right-skewed distribution, there is a long tail in the positive direction on the number line. The mean is also to the right of the peak.&#39;</span>
+    <span class="k">elif</span> <span class="n">skew1</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">description1</span> <span class="o">=</span><span class="s1">&#39;The data has left-skewed distribution, there is a long tail in the negative direction on the number line. The mean is also to the left of the peak.&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">description1</span> <span class="o">=</span> <span class="s1">&#39;The data has normal distribution.&#39;</span>
+        
+    <span class="k">if</span> <span class="n">skew2</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">description2</span> <span class="o">=</span> <span class="s1">&#39;The data has right-skewed distribution, there is a long tail in the positive direction on the number line. The mean is also to the right of the peak.&#39;</span>
+    <span class="k">elif</span> <span class="n">skew2</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">description2</span> <span class="o">=</span><span class="s1">&#39;The data has left-skewed distribution, there is a long tail in the negative direction on the number line. The mean is also to the left of the peak.&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">description2</span> <span class="o">=</span> <span class="s1">&#39;The data has normal distribution.&#39;</span>
+    
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;&lt;b&gt;Conclustion&lt;/b&gt;&#39;</span><span class="p">]],</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#506784&#39;</span><span class="p">),</span>
+            <span class="n">fill</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#119DFF&#39;</span><span class="p">),</span>
+            <span class="n">align</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="s1">&#39;center&#39;</span><span class="p">],</span>
+            <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">),</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="p">),</span>
+        <span class="n">cells</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="s2">&quot;&lt;b&gt; </span><span class="si">%s</span><span class="s2">: &lt;/b&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="n">description1</span><span class="p">,</span> <span class="s2">&quot;&lt;b&gt; </span><span class="si">%s</span><span class="s2">: &lt;/b&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="n">description2</span><span class="p">]],</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#506784&#39;</span><span class="p">),</span>
+            <span class="n">fill</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#25FEFD&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">]),</span>
+            <span class="n">align</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">],</span>
+            <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#506784&#39;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">),</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">trace</span><span class="p">]</span>    
+    <span class="n">layout</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Skewness conclusion for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span><span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;Skew Conclusion&quot;</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">:</span><span class="n">fig</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="scatter"><a class="viewcode-back" href="../analysis_nn.html#analysis_nn.scatter">[docs]</a><span class="k">def</span> <span class="nf">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colNames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function creates a graph that plots two datasets with first column as x-axis, and second column as y-axis.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dict with scatter plotly graph and its label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#119DFF&#39;</span><span class="p">,</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">trace</span><span class="p">]</span>
+    <span class="n">layout</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Scatter plot of the data across &#39;</span> <span class="o">+</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span><span class="o">+</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="n">hovermode</span> <span class="o">=</span> <span class="s1">&#39;closest&#39;</span><span class="p">,</span>
+          <span class="n">xaxis</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+          <span class="n">title</span> <span class="o">=</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+          <span class="n">ticklen</span> <span class="o">=</span> <span class="mi">5</span><span class="p">),</span>
+          <span class="n">yaxis</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+          <span class="n">title</span> <span class="o">=</span> <span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+          <span class="n">ticklen</span> <span class="o">=</span> <span class="mi">5</span><span class="p">))</span>        
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;Scatter&quot;</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">:</span><span class="n">fig</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="corr"><a class="viewcode-back" href="../analysis_nn.html#analysis_nn.corr">[docs]</a><span class="k">def</span> <span class="nf">corr</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">colNames</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function creates a table that contains correlation coefficient, p value and a small summary of the two numeric columns.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pandas.DataFrame): The pandas dataframe that contains data columns to be analysed.</span>
+<span class="sd">        colNames (list): The list of column names to be analysed.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dict with correlation plotly table and its label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">corr</span> <span class="o">=</span> <span class="n">pearsonr</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()],[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()])</span>
+    <span class="n">strength</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="n">sig</span><span class="o">=</span><span class="s1">&#39; &#39;</span>
+    <span class="n">conclusion</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="n">r</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">corr</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span><span class="mf">0.1</span> <span class="ow">and</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mf">0.3</span><span class="p">:</span>
+        <span class="n">strength</span> <span class="o">=</span> <span class="s1">&#39;small correlation&#39;</span>
+    <span class="k">elif</span> <span class="n">r</span> <span class="o">&gt;</span><span class="mf">0.3</span> <span class="ow">and</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+        <span class="n">strength</span> <span class="o">=</span> <span class="s1">&#39;medium/moderate correation&#39;</span>
+    <span class="k">elif</span> <span class="n">r</span> <span class="o">&gt;</span><span class="mf">0.5</span><span class="p">:</span>
+        <span class="n">strength</span> <span class="o">=</span> <span class="s1">&#39;large/strong correlation&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">strength</span> <span class="o">=</span> <span class="s1">&#39;no correlation&#39;</span>
+    <span class="k">if</span> <span class="n">corr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;positive&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;negative&#39;</span>
+
+    <span class="k">if</span> <span class="n">corr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="s1">&#39;statistically significant&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="s1">&#39;statistically insignificant&#39;</span>
+
+    <span class="k">if</span> <span class="n">strength</span> <span class="o">==</span> <span class="s1">&#39;no correlation&#39;</span><span class="p">:</span>
+        <span class="n">conclusion</span> <span class="o">=</span> <span class="s1">&#39;Two datasets have no correlation&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">conclusion</span><span class="o">=</span><span class="s1">&#39;Two datasets have &#39;</span><span class="o">+</span> <span class="n">sign</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">+</span> <span class="n">strength</span> <span class="o">+</span><span class="s1">&#39; and this result is &#39;</span> <span class="o">+</span> <span class="n">sig</span> <span class="o">+</span><span class="s1">&#39;.&#39;</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1. The correlation coefficient is&#39;</span><span class="p">:</span> <span class="n">corr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;2. P value is&#39;</span><span class="p">:</span> <span class="n">corr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;3. Conclusion&#39;</span><span class="p">:</span> <span class="n">conclusion</span><span class="p">}</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;&lt;b&gt;Simple Analysis on Correlation&lt;/b&gt;&#39;</span><span class="p">],</span>
+                      <span class="p">[</span><span class="s1">&#39;&lt;b&gt;Result&lt;/b&gt;&#39;</span><span class="p">]],</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#506784&#39;</span><span class="p">),</span>
+            <span class="n">fill</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#119DFF&#39;</span><span class="p">),</span>
+            <span class="n">align</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span><span class="s1">&#39;center&#39;</span><span class="p">],</span>
+            <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">),</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="p">),</span>
+        <span class="n">cells</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">values</span><span class="p">())],</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#506784&#39;</span><span class="p">),</span>
+            <span class="n">fill</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#25FEFD&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">]),</span>
+            <span class="n">align</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">],</span>
+            <span class="n">font</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;#506784&#39;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">12</span><span class="p">),</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">trace</span><span class="p">]</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span> <span class="nb">dict</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Correlation Table for &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">colNames</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span><span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">colNames</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;Correlation&quot;</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">:</span><span class="n">fig</span><span class="p">}</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, shrey.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
